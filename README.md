@@ -18,6 +18,7 @@ Este projeto foi construído com o objetivo de demonstrar conhecimentos em desen
 ## 🛠️ Tecnologias Utilizadas
 
 - React
+- TypeScript
 - ShadcnUI
 - TailwindCSS
 
