@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className="bg-background flex flex-col fixed top-0 left-0 right-0 border-b w-full h-24 z-50">
       <Discount />
-      <div className="w-full flex items-center justify-center py-2 px-8 h-full">
+      <div className="w-full flex items-center justify-center py-2 px-8 h-full shadow-md">
         <Logo />
         <IconsMobile />
         <SearchDesktop />

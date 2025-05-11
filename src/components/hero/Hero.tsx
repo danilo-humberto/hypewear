@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { ChevronRight } from "lucide-react";
 import Navigation from "./Navigation";
+import FlashSaleSwiper from "./FlashSaleSwiper";
 
 const Hero = () => {
   return (
@@ -12,8 +13,10 @@ const Hero = () => {
       />
       <div className="z-10 absolute top-0 left-0 flex flex-col items-center justify-center gap-3 h-screen w-full p-4">
         <Navigation />
-        <h1 className="text-background text-6xl">HypeWear</h1>
-        <p className="text-background/60 text-center text-sm">
+        <h1 className="text-background dark:text-foreground text-6xl">
+          HypeWear
+        </h1>
+        <p className="text-background dark:text-foreground/60 text-center text-sm">
           HypeWear offers trendy, high-quality fashion at affordable prices,
           perfect for any occasion and style.
         </p>
@@ -25,6 +28,7 @@ const Hero = () => {
           </Button>
         </div>
       </div>
+      <FlashSaleSwiper />
     </main>
   );
 };
