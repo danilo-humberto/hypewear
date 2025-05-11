@@ -7,7 +7,7 @@ const IconsDesktop = () => {
       <ModeToggle />
       <div className="flex items-center gap-1 cursor-pointer p-2 rounded-md transition-all duration-300 hover:bg-accent relative">
         <ShoppingBag />
-        <span className="absolute -top-0 -right-0 bg-red-400 w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
+        <span className="absolute -top-0 -right-0 bg-foreground text-background w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
           0
         </span>
       </div>

@@ -10,7 +10,7 @@ const IconsMobile = () => {
       <SearchMobile />
       <div className="relative">
         <ShoppingBag />
-        <span className="absolute -top-2.5 -right-1 bg-red-400 w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
+        <span className="absolute -top-2.5 -right-1 bg-foreground text-background w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
           0
         </span>
       </div>
