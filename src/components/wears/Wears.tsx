@@ -1,17 +1,16 @@
 import Cards from "./Cards";
+import SelectType from "./SelectType";
 
 const Wears = () => {
   return (
-    <div className="absolute top-[85%] w-full px-2 lg:px-10 mb-4">
-      <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-        <Cards />
-        <Cards />
-        <Cards />
-        <Cards />
-        <Cards />
-        <Cards />
-        <Cards />
-        <Cards />
+    <div className="absolute top-[75%] w-full px-2 lg:px-10 mb-4 z-40">
+      <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative">
+        <div className="flex items-center justify-end mb-4">
+          <SelectType />
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <Cards />
+        </div>
       </div>
     </div>
   );

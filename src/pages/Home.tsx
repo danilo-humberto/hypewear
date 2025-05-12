@@ -4,7 +4,7 @@ import Wears from "@/components/wears/Wears";
 
 const Home = () => {
   return (
-    <div>
+    <div className="relative">
       <Header />
       <Hero />
       <Wears />
