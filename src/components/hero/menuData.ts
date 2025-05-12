@@ -1,7 +1,6 @@
 export const menuData = [
   {
     title: "Latest Collections",
-    columns: 4,
     sections: [
       {
         title: "Streetwear",
@@ -35,7 +34,6 @@ export const menuData = [
   },
   {
     title: "Best",
-    columns: 3,
     sections: [
       {
         title: "Masculino",
@@ -59,7 +57,6 @@ export const menuData = [
   },
   {
     title: "Style",
-    columns: 4,
     sections: [
       {
         title: "Casual",
@@ -93,7 +90,6 @@ export const menuData = [
   },
   {
     title: "Men",
-    columns: 4,
     sections: [
       {
         title: "Roupas",
@@ -124,7 +120,6 @@ export const menuData = [
   },
   {
     title: "Woman",
-    columns: 4,
     sections: [
       {
         title: "Roupas",

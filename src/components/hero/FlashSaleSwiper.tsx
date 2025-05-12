@@ -3,10 +3,10 @@ import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 
 const FlashSaleSwiper = () => {
-  const slides = Array(10).fill(["2025 Flash Sale", "12:00PM"]).flat();
+  const slides = Array(15).fill(["2025 Flash Sale", "12:00PM"]).flat();
 
   return (
-    <div className="bg-background w-full absolute top-2/3 px-8 py-2 overflow-hidden">
+    <div className="bg-background w-full absolute top-2/3 py-2 overflow-hidden">
       <Swiper
         modules={[Autoplay, FreeMode]}
         loop={true}
