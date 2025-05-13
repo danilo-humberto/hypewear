@@ -5,29 +5,29 @@ export const menuData = [
       {
         title: "Streetwear",
         links: [
-          { label: "Spring 2025", href: "/collection/spring" },
-          { label: "Fall Trends", href: "/collection/fall" },
+          { label: "Spring 2025", href: "#" },
+          { label: "Fall Trends", href: "#" },
         ],
       },
       {
         title: "Top Picks",
         links: [
-          { label: "Best Sellers", href: "/best-sellers" },
-          { label: "Editor's Choice", href: "/editor-choice" },
+          { label: "Best Sellers", href: "#" },
+          { label: "Editor's Choice", href: "#" },
         ],
       },
       {
         title: "Acessórios",
         links: [
-          { label: "Bolsas", href: "/acessorios/bolsas" },
-          { label: "Joias", href: "/acessorios/joias" },
+          { label: "Bolsas", href: "#" },
+          { label: "Joias", href: "#" },
         ],
       },
       {
         title: "Looks",
         links: [
-          { label: "Inspirações", href: "/looks/inspiracoes" },
-          { label: "Combos", href: "/looks/combos" },
+          { label: "Inspirações", href: "#" },
+          { label: "Combos", href: "#" },
         ],
       },
     ],
@@ -38,20 +38,20 @@ export const menuData = [
       {
         title: "Masculino",
         links: [
-          { label: "T-Shirts", href: "/style/masculino/t-shirts" },
-          { label: "Jaquetas", href: "/style/masculino/jaquetas" },
+          { label: "T-Shirts", href: "#" },
+          { label: "Jaquetas", href: "#" },
         ],
       },
       {
         title: "Feminino",
         links: [
-          { label: "Tops", href: "/style/feminino/tops" },
-          { label: "Casacos", href: "/style/feminino/casacos" },
+          { label: "Tops", href: "#" },
+          { label: "Casacos", href: "#" },
         ],
       },
       {
         title: "Unissex",
-        links: [{ label: "Ver todos", href: "/style/unissex" }],
+        links: [{ label: "Ver todos", href: "#" }],
       },
     ],
   },
@@ -61,29 +61,29 @@ export const menuData = [
       {
         title: "Casual",
         links: [
-          { label: "Casual Urbano", href: "/style/casual-urbano" },
-          { label: "Minimalista", href: "/style/minimalista" },
+          { label: "Casual Urbano", href: "#" },
+          { label: "Minimalista", href: "#" },
         ],
       },
       {
         title: "Esportivo",
         links: [
-          { label: "Athleisure", href: "/style/athleisure" },
-          { label: "Techwear", href: "/style/techwear" },
+          { label: "Athleisure", href: "#" },
+          { label: "Techwear", href: "#" },
         ],
       },
       {
         title: "Retrô",
         links: [
-          { label: "Vintage", href: "/style/vintage" },
-          { label: "Anos 90", href: "/style/anos-90" },
+          { label: "Vintage", href: "#" },
+          { label: "Anos 90", href: "#" },
         ],
       },
       {
         title: "Outros",
         links: [
-          { label: "Street Art", href: "/style/street-art" },
-          { label: "High Fashion", href: "/style/high-fashion" },
+          { label: "Street Art", href: "#" },
+          { label: "High Fashion", href: "#" },
         ],
       },
     ],
@@ -94,27 +94,27 @@ export const menuData = [
       {
         title: "Roupas",
         links: [
-          { label: "Camisetas", href: "/men/camisetas" },
-          { label: "Calças", href: "/men/calcas" },
+          { label: "Camisetas", href: "#" },
+          { label: "Calças", href: "#" },
         ],
       },
       {
         title: "Acessórios",
         links: [
-          { label: "Relógios", href: "/men/relogios" },
-          { label: "Óculos de Sol", href: "/men/oculos" },
+          { label: "Relógios", href: "#" },
+          { label: "Óculos de Sol", href: "#" },
         ],
       },
       {
         title: "Calçados",
         links: [
-          { label: "Tênis", href: "/men/tenis" },
-          { label: "Botas", href: "/men/botas" },
+          { label: "Tênis", href: "#" },
+          { label: "Botas", href: "#" },
         ],
       },
       {
         title: "Promoções",
-        links: [{ label: "Descontos Especiais", href: "/men/sale" }],
+        links: [{ label: "Descontos Especiais", href: "#" }],
       },
     ],
   },
@@ -124,27 +124,27 @@ export const menuData = [
       {
         title: "Roupas",
         links: [
-          { label: "Vestidos", href: "/woman/vestidos" },
-          { label: "Saias", href: "/woman/saias" },
+          { label: "Vestidos", href: "#" },
+          { label: "Saias", href: "#" },
         ],
       },
       {
         title: "Acessórios",
         links: [
-          { label: "Joias", href: "/woman/joias" },
-          { label: "Bolsas", href: "/woman/bolsas" },
+          { label: "Joias", href: "#" },
+          { label: "Bolsas", href: "#" },
         ],
       },
       {
         title: "Calçados",
         links: [
-          { label: "Tênis", href: "/woman/sneakers" },
-          { label: "Sandálias", href: "/woman/sandalias" },
+          { label: "Tênis", href: "#" },
+          { label: "Sandálias", href: "#" },
         ],
       },
       {
         title: "Novidades",
-        links: [{ label: "Novas Coleções", href: "/woman/new" }],
+        links: [{ label: "Novas Coleções", href: "#" }],
       },
     ],
   },
