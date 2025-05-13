@@ -9,24 +9,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useCategories } from "@/hooks/queries/useCategories";
 
 const SelectType = () => {
   const [selected, setSelected] = useState("");
   const handleSelectChange = (value: string) => {
     setSelected(value === "clear" ? "" : value);
   };
+
+  const { data: categories } = useCategories();
+
   return (
     <Select value={selected} onValueChange={handleSelectChange}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a type" />
+        <SelectValue placeholder="Select a Category" />
       </SelectTrigger>
       <SelectContent side="left">
         <SelectGroup>
-          <SelectLabel>Types</SelectLabel>
-          <SelectItem value="Shirt">Shirt</SelectItem>
-          <SelectItem value="Legs">Legs</SelectItem>
-          <SelectItem value="Men">Men</SelectItem>
-          <SelectItem value="Woman">Woman</SelectItem>
+          <SelectLabel>Categories</SelectLabel>
+          {categories ? (
+            categories?.map((category: string, index: number) => (
+              <SelectItem key={index} value={category}>
+                {category}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem value="No categories">No categories</SelectItem>
+          )}
         </SelectGroup>
         <SelectSeparator />
         <SelectGroup>

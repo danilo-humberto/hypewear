@@ -1,31 +1,24 @@
-import { useState } from "react";
-import { Star } from "lucide-react"; // Ou use ícones como Heroicons ou SVGs
+import { Star } from "lucide-react";
 
-const StarRating = ({ totalStars = 5 }) => {
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
+interface StarRatingProps {
+  totalStars?: number;
+  rating?: number;
+}
 
+const StarRating = ({ totalStars = 5, rating = 0 }: StarRatingProps) => {
   return (
     <div className="flex space-x-0.5">
       {[...Array(totalStars)].map((_, index) => {
         const starValue = index + 1;
-        const isFilled = hover >= starValue || rating >= starValue;
 
-        return (
-          <button
-            key={starValue}
-            type="button"
-            onMouseEnter={() => setHover(starValue)}
-            onMouseLeave={() => setHover(0)}
-            className="text-foreground transition-transform duration-200"
-          >
-            <Star
-              className={`w-6 h-6 ${
-                isFilled ? "fill-foreground" : "fill-none stroke-current"
-              }`}
-            />
-          </button>
-        );
+        let icon;
+        if (rating >= starValue) {
+          icon = <Star className="w-5 h-5 fill-foreground" />;
+        } else {
+          icon = <Star className="w-5 h-5 fill-none stroke-current" />;
+        }
+
+        return <div key={starValue}>{icon}</div>;
       })}
     </div>
   );
