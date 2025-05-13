@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -11,25 +10,28 @@ import {
 } from "../ui/select";
 import { useCategories } from "@/hooks/queries/useCategories";
 
-const SelectType = () => {
-  const [selected, setSelected] = useState("");
-  const handleSelectChange = (value: string) => {
-    setSelected(value === "clear" ? "" : value);
-  };
+interface SelectTypeProps {
+  selected: string;
+  handleSelectChange: (value: string) => void;
+}
 
+const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
   const { data: categories } = useCategories();
 
   return (
     <Select value={selected} onValueChange={handleSelectChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px] capitalize">
         <SelectValue placeholder="Select a Category" />
       </SelectTrigger>
       <SelectContent side="left">
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
+          <SelectItem value="all" className="capitalize">
+            all
+          </SelectItem>
           {categories ? (
             categories?.map((category: string, index: number) => (
-              <SelectItem key={index} value={category}>
+              <SelectItem key={index} value={category} className="capitalize">
                 {category}
               </SelectItem>
             ))

@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { ChevronRight } from "lucide-react";
 import Navigation from "./Navigation";
-import FlashSaleSwiper from "./FlashSaleSwiper";
+import FlashSaleSwiper from "../FlashSaleSwiper";
 
 const Hero = () => {
   return (
@@ -28,7 +28,11 @@ const Hero = () => {
           </Button>
         </div>
       </div>
-      <FlashSaleSwiper />
+      <FlashSaleSwiper
+        absolute={true}
+        background={"bg-background"}
+        textColor={"text-foreground"}
+      />
     </main>
   );
 };

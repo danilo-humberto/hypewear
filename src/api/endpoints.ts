@@ -19,3 +19,11 @@ export const getProductsByCategory = async (category: string) => {
   const { data } = await api.get(`/products/category/${category}`);
   return data;
 };
+
+export const getAllProductsOrByCategory = async (category: string) => {
+  if (!category || category === "all") {
+    return getProducts();
+  } else {
+    return getProductsByCategory(category);
+  }
+};

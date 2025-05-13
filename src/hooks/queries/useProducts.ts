@@ -1,4 +1,5 @@
 import {
+  getAllProductsOrByCategory,
   getProduct,
   getProducts,
   getProductsByCategory,
@@ -23,4 +24,11 @@ export const useProductById = (id: number) =>
     queryKey: ["product", id],
     queryFn: () => getProduct(id),
     enabled: !!id,
+  });
+
+export const useAllProductsOrByCategory = (category: string) =>
+  useQuery({
+    queryKey: ["products", category],
+    queryFn: () => getAllProductsOrByCategory(category),
+    enabled: !!category,
   });
