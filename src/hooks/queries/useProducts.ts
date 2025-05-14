@@ -30,5 +30,5 @@ export const useAllProductsOrByCategory = (category: string) =>
   useQuery({
     queryKey: ["products", category],
     queryFn: () => getAllProductsOrByCategory(category),
-    enabled: !!category,
+    retry: 1,
   });

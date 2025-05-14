@@ -7,7 +7,6 @@ interface Rating {
   count: number;
 }
 interface CardsProps {
-  id: number;
   title: string;
   description: string;
   price: number;

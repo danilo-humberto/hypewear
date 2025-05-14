@@ -1,5 +1,5 @@
 import { NavigationMenu, NavigationMenuList } from "../ui/navigation-menu";
-import { menuData } from "./menuData";
+import { menuData } from "../menuData";
 import NavigationItem from "./NavigationItem";
 
 const Navigation = () => {

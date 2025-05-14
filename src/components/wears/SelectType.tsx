@@ -20,15 +20,12 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
 
   return (
     <Select value={selected} onValueChange={handleSelectChange}>
-      <SelectTrigger className="w-[180px] capitalize">
+      <SelectTrigger className="w-[180px] capitalize cursor-pointer">
         <SelectValue placeholder="Select a Category" />
       </SelectTrigger>
-      <SelectContent side="left">
+      <SelectContent side="left" position="popper" avoidCollisions={false}>
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
-          <SelectItem value="all" className="capitalize">
-            all
-          </SelectItem>
           {categories ? (
             categories?.map((category: string, index: number) => (
               <SelectItem key={index} value={category} className="capitalize">
@@ -41,7 +38,9 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
         </SelectGroup>
         <SelectSeparator />
         <SelectGroup>
-          <SelectItem value="clear">Clear</SelectItem>
+          <SelectItem value="clear" className="capitalize">
+            Clear
+          </SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

@@ -7,13 +7,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
+import { Accordion } from "../ui/accordion";
 import { CircleUserRound, Menu } from "lucide-react";
+import { menuData } from "../menuData";
+import MenuSheetItem from "./MenuSheetItem";
 const MenuSheet = () => {
   return (
     <Sheet>
@@ -27,26 +24,13 @@ const MenuSheet = () => {
         </SheetHeader>
         <div className="p-4">
           <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>Latest Collections</AccordionTrigger>
-              <AccordionContent>T-Shirt</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger>Best</AccordionTrigger>
-              <AccordionContent>T-Shirt</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger>Style</AccordionTrigger>
-              <AccordionContent>T-Shirt</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-4">
-              <AccordionTrigger>Men</AccordionTrigger>
-              <AccordionContent>T-Shirt</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-5">
-              <AccordionTrigger>Woman</AccordionTrigger>
-              <AccordionContent>T-Shirt</AccordionContent>
-            </AccordionItem>
+            {menuData.map((item, i) => (
+              <MenuSheetItem
+                key={i}
+                title={item.title}
+                sections={item.sections}
+              />
+            ))}
           </Accordion>
         </div>
         <SheetFooter>
