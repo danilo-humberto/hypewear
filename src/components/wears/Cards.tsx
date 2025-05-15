@@ -1,3 +1,4 @@
+import { useCart } from "@/hooks/useCart";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import StarRating from "./StarRating";
@@ -7,6 +8,7 @@ interface Rating {
   count: number;
 }
 interface CardsProps {
+  id: number;
   title: string;
   description: string;
   price: number;
@@ -14,7 +16,15 @@ interface CardsProps {
   rating: Rating;
 }
 
-const Cards = ({ title, description, price, image, rating }: CardsProps) => {
+const Cards = ({
+  title,
+  description,
+  price,
+  image,
+  rating,
+  id,
+}: CardsProps) => {
+  const { addToCart: AddtoCart } = useCart();
   return (
     <Card className="shadow-none">
       <CardContent className="w-full">
@@ -38,7 +48,9 @@ const Cards = ({ title, description, price, image, rating }: CardsProps) => {
           </span>
         </div>
         <div className="p-2 flex justify-between items-center">
-          <Button variant={"outline"}>Add to Cart</Button>
+          <Button variant={"outline"} onClick={() => AddtoCart(id)}>
+            Add to Cart
+          </Button>
           <div className="flex items-center gap-2">
             <span>( {rating.count} )</span>
             <StarRating rating={rating.rate} />
