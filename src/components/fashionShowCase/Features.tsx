@@ -1,5 +1,4 @@
 import { ShieldCheck, Smartphone, Truck } from "lucide-react";
-import { Separator } from "../ui/separator";
 
 const featuresData = [
   {
@@ -31,25 +30,13 @@ const Features = () => {
             key={index}
             className="flex flex-col lg:flex-row items-center w-full"
           >
-            <div className="flex flex-col items-center gap-2 flex-[1] lg:max-w-[413px]">
+            <div className="flex flex-col items-center justify-center gap-2 flex-[1]">
               {feature.icon}
               <h3 className="font-bold">{feature.title}</h3>
               <p className="text-muted-foreground text-center">
                 {feature.description}
               </p>
             </div>
-            {/* Separador horizontal para mobile */}
-            {index < featuresData.length - 1 && (
-              <>
-                <div className="block lg:hidden w-1/2 my-6">
-                  <Separator />
-                </div>
-
-                <div className="hidden lg:block h-1/2 px-6">
-                  <Separator orientation="vertical" />
-                </div>
-              </>
-            )}
           </div>
         );
       })}
