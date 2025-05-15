@@ -8,10 +8,21 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Accordion } from "../ui/accordion";
-import { CircleUserRound, Menu } from "lucide-react";
+import {
+  CircleUserRound,
+  Menu,
+  ChevronsUpDown,
+  LogIn,
+  Cog,
+} from "lucide-react";
 import { menuData } from "../menuData";
 import MenuSheetItem from "./MenuSheetItem";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useState } from "react";
+import { Button } from "../ui/button";
 const MenuSheet = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -34,11 +45,30 @@ const MenuSheet = () => {
           </Accordion>
         </div>
         <SheetFooter>
-          <SheetDescription>
-            <div className="flex items-center gap-2">
-              <CircleUserRound />
-              <span>Account</span>
-            </div>
+          <SheetDescription className="h-[50px]">
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild className="h-full">
+                <Button variant={"outline"} className="w-full justify-between">
+                  <div className="flex gap-2 items-center">
+                    <CircleUserRound size={25} />
+                    <span>Account</span>
+                  </div>
+                  <ChevronsUpDown size={25} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <ul className="flex flex-col gap-2">
+                  <li className="flex items-center gap-2 text-foreground/70 border-b border-b-accent pb-2">
+                    <Cog size={20} />
+                    <a href="#">Settings</a>
+                  </li>
+                  <li className="flex items-center gap-2 text-foreground/70">
+                    <LogIn size={20} />
+                    <a href="#">Login / Register</a>
+                  </li>
+                </ul>
+              </PopoverContent>
+            </Popover>
           </SheetDescription>
         </SheetFooter>
       </SheetContent>
