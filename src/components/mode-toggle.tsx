@@ -1,46 +1,58 @@
 import { Moon, Sun } from "lucide-react";
-
-// import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/hooks/theme-provider";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Separator } from "./ui/separator";
+import { useState } from "react";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const [openPop, setOpenPop] = useState(false);
+  const { setTheme, theme } = useTheme();
+
+  const handleTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+      setOpenPop(false);
+    } else {
+      setTheme("light");
+      setOpenPop(false);
+    }
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Popover open={openPop} onOpenChange={setOpenPop}>
+      <PopoverTrigger
+        asChild
+        className="cursor-pointer hover:bg-accent p-0 lg:p-2 rounded-md duration-300"
+      >
         <button>
           <Sun
             size={25}
-            className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+            className="rotate-0 scale-100 transition-all duration-500 dark:-rotate-90 dark:scale-0"
           />
           <Moon
             size={25}
-            className="absolute rotate-90 top-0 scale-0 transition-all dark:rotate-0 dark:scale-100"
+            className="absolute rotate-90 top-[0.08rem] lg:top-[0.8rem] scale-0 transition-all duration-500 dark:rotate-0 dark:scale-100"
           />
           <span className="sr-only">Toggle theme</span>
         </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => setTheme("light")}
-          className="cursor-pointer"
-        >
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setTheme("dark")}
-          className="cursor-pointer"
-        >
-          Dark
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-40">
+        <ul className="flex flex-col gap-2">
+          <li
+            className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm"
+            onClick={handleTheme}
+          >
+            Light
+          </li>
+          <Separator />
+          <li
+            className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm"
+            onClick={handleTheme}
+          >
+            Dark
+          </li>
+        </ul>
+      </PopoverContent>
+    </Popover>
   );
 }

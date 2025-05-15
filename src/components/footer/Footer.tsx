@@ -6,7 +6,7 @@ const Footer = () => {
   const { theme } = useTheme();
 
   return (
-    <footer className="bg-background mt-4 p-4 w-full h-auto">
+    <footer className="bg-background mt-2 p-4 w-full h-auto">
       <div className="flex flex-col md:flex-row justify-between w-full md:w-[90%] mx-auto pb-4 border-b border-b-accent">
         <div>
           <div className="flex items-center -ml-[10px]">

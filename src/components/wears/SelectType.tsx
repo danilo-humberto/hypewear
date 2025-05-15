@@ -38,8 +38,8 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
         </SelectGroup>
         <SelectSeparator />
         <SelectGroup>
-          <SelectItem value="clear" className="capitalize">
-            Clear
+          <SelectItem value="All" className="capitalize">
+            All
           </SelectItem>
         </SelectGroup>
       </SelectContent>

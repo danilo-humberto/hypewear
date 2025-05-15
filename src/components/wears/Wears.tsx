@@ -10,7 +10,7 @@ const Wears = () => {
   const wearsRef = useRef<HTMLDivElement>(null);
 
   const handleSelectChange = (value: string) => {
-    setSelected(value === "clear" ? "" : value);
+    setSelected(value === "All" ? "All" : value);
   };
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Wears = () => {
 
   return (
     <div
-      className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-13rem] relative z-40"
+      className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-25vh] relative z-40"
       ref={wearsRef}
     >
       <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative">
@@ -32,7 +32,7 @@ const Wears = () => {
           />
         </div>
         {isLoading ? (
-          <div className="flex items-center justify-center w-full h-full">
+          <div className="flex items-center justify-center w-full h-[300px]">
             <LoaderCircle size={30} className="animate-spin" />
           </div>
         ) : products ? (
@@ -48,7 +48,7 @@ const Wears = () => {
             ))}
           </div>
         ) : (
-          <div className="flex items-center justify-center w-full h-full">
+          <div className="flex items-center justify-center w-full h-[300px]">
             <p className="text-muted-foreground">No products found</p>
           </div>
         )}

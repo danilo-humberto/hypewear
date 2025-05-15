@@ -117,4 +117,22 @@
   body {
     @apply bg-accent text-foreground;
   }
+
+  html {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.205 0 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: oklch(0.269 0 0);
+  border-radius: 10px;
+  border: 3px solid oklch(0.205 0 0);
 }

@@ -21,7 +21,7 @@ export const getProductsByCategory = async (category: string) => {
 };
 
 export const getAllProductsOrByCategory = async (category: string) => {
-  if (!category || category === "all") {
+  if (!category || category === "All") {
     return getProducts();
   } else {
     return getProductsByCategory(category);

@@ -22,7 +22,9 @@ interface NavigationItemProps {
 const NavigationItem = ({ title, sections }: NavigationItemProps) => {
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger>{title}</NavigationMenuTrigger>
+      <NavigationMenuTrigger className="text-foreground">
+        {title}
+      </NavigationMenuTrigger>
       <NavigationMenuContent>
         <div className={`grid grid-cols-4 gap-6 p-6 max-w-7xl mx-auto`}>
           {sections.map((section, i) => (

@@ -10,11 +10,13 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <Hero />
-      <Wears />
-      <FashionShowCase />
-      <Highlights />
-      <Questions />
+      <main className="flex flex-col">
+        <Hero />
+        <Wears />
+        <FashionShowCase />
+        <Highlights />
+        <Questions />
+      </main>
       <Footer />
     </div>
   );

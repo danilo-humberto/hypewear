@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 
 const Questions = () => {
   return (
-    <section className="bg-background mt-4 px-4 py-10 w-full">
+    <section className="bg-background mt-2 px-4 py-10 w-full">
       <div className="w-full md:w-[90%] mx-auto">
         <h3 className="font-bold text-2xl mb-2">Frenquently Asked Questions</h3>
         <div className="flex flex-col gap-2 md:flex-row md:items-center justify-between">
