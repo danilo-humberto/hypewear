@@ -1,16 +1,111 @@
 import { useCart } from "@/hooks/useCart";
-import { ShoppingBag } from "lucide-react";
+import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
 
 const Cart = () => {
-  const { cart } = useCart();
+  const { cart, removeQuantityOrProduct, addQuantity } = useCart();
 
   return (
-    <div className="lg:flex lg:items-center lg:gap-1 lg:cursor-pointer lg:p-2 lg:rounded-md lg:transition-all lg:duration-300 lg:hover:bg-accent relative">
-      <ShoppingBag />
-      <span className="absolute -top-2 lg:-top-0 -right-1 lg:-right-0 bg-foreground text-background w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
-        {cart.length}
-      </span>
-    </div>
+    <Sheet>
+      <SheetTrigger asChild>
+        <div className="lg:flex lg:items-center lg:gap-1 lg:cursor-pointer lg:p-2 lg:rounded-md lg:transition-all lg:duration-300 lg:hover:bg-accent relative">
+          <ShoppingBag />
+          <span className="absolute -top-2 lg:-top-0 -right-1 lg:-right-0 bg-foreground text-background w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
+            {cart.length}
+          </span>
+        </div>
+      </SheetTrigger>
+      <SheetContent
+        side="right"
+        className="w-full overflow-y-scroll pb-[130px] [&>button]:hidden hide-scrollbar"
+      >
+        <SheetHeader className="fixed bg-background w-full lg:w-[20%] border-b border-b-muted-foreground flex-row justify-between">
+          <div>
+            <SheetTitle className="text-2xl">Cart</SheetTitle>
+            <SheetDescription>Checkout</SheetDescription>
+          </div>
+          <SheetClose className="cursor-pointer">
+            <X className="text-muted-foreground" />
+          </SheetClose>
+        </SheetHeader>
+        <div className="px-4 flex flex-col gap-2 mt-[100px]">
+          {cart.map((item, index) => (
+            <Card key={index} className="w-full h-[160px] flex-1">
+              <CardContent className="flex gap-2">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-24 h-[6.5rem] object-contain rounded-md"
+                />
+                <div className="flex flex-col gap-1 justify-between flex-1">
+                  <div className="flex flex-col gap-2 w-[220px]">
+                    <p className="text-sm truncate">{item.title}</p>
+                    <p className="truncate text-sm text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+                  <div className="w-full flex justify-between items-center">
+                    <span className="font-bold">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(item.totalPrice)}
+                    </span>
+                    <div className="flex border border-muted rounded-sm items-center">
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => removeQuantityOrProduct(item.id)}
+                        className="rounded-none"
+                      >
+                        <Minus />
+                      </Button>
+                      <Button
+                        variant={"ghost"}
+                        className="border-x border-x-muted rounded-none hover:bg-transparent dark:hover:bg-transparent"
+                      >
+                        {item.quantity}
+                      </Button>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => addQuantity(item.id)}
+                        className="rounded-none"
+                      >
+                        <Plus />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <SheetFooter className="p-0 fixed w-full lg:w-[20%] bottom-0 bg-background">
+          <div className="border-t border-t-muted-foreground p-4">
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-xl">Total:</span>
+              <span className="font-bold">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(cart.reduce((acc, item) => acc + item.totalPrice, 0))}
+              </span>
+            </div>
+            <Button className="w-full mt-5 h-[5vh]">Checkout</Button>
+          </div>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 };
 

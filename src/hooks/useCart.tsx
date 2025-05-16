@@ -11,6 +11,8 @@ interface Product {
   description: string;
   category: string;
   image: string;
+  quantity: number;
+  totalPrice: number;
   rating: {
     rate: number;
     count: number;
@@ -20,6 +22,8 @@ interface Product {
 interface CartContextType {
   cart: Product[];
   addToCart: (id: number) => Promise<void>;
+  removeQuantityOrProduct: (id: number) => void;
+  addQuantity: (id: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -32,16 +36,87 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!product) product = await getProduct(id);
 
     if (product) {
-      setCart((prev) => [...prev, product]);
-      console.log("Product added to cart:", product);
+      setCart((prevCart) => {
+        const existingProduct = prevCart.find((item) => item.id === id);
+        if (existingProduct) {
+          const updatedCart = prevCart.map((item) => {
+            if (item.id === id) {
+              const newQuantity = item.quantity + 1;
+              const totalPrice =
+                item.quantity >= 1 ? item.price * newQuantity : item.price;
+              return {
+                ...item,
+                quantity: newQuantity,
+                totalPrice,
+              };
+            } else {
+              return item;
+            }
+          });
+          return updatedCart;
+        } else {
+          const updatedCart = [
+            ...prevCart,
+            { ...product, quantity: 1, totalPrice: product.price },
+          ];
+          return updatedCart;
+        }
+      });
       toast.success(`Product added to cart`);
     } else {
       toast.error("Product not found");
     }
+
+    console.log(cart);
+  };
+
+  const removeQuantityOrProduct = (id: number) => {
+    setCart((prev) => {
+      const existingProduct = prev.find((item) => item.id === id);
+
+      if (!existingProduct) return prev;
+
+      if (existingProduct.quantity > 1) {
+        return prev.map((item) => {
+          if (item.id === id) {
+            const newQuantity = item.quantity - 1;
+            const totalPrice = item.price * newQuantity;
+            return {
+              ...item,
+              quantity: newQuantity,
+              totalPrice,
+            };
+          }
+
+          return item;
+        });
+      }
+
+      return prev.filter((item) => item.id !== id);
+    });
+  };
+
+  const addQuantity = (id: number) => {
+    setCart((prev) => {
+      return prev.map((item) => {
+        if (item.id === id) {
+          const newQuantity = item.quantity + 1;
+          const totalPrice = item.price * newQuantity;
+          return {
+            ...item,
+            quantity: newQuantity,
+            totalPrice,
+          };
+        }
+        return item;
+      });
+    });
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeQuantityOrProduct, addQuantity }}
+    >
       {children}
     </CartContext.Provider>
   );
