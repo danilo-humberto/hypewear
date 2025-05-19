@@ -44,6 +44,7 @@ const Wears = () => {
                 description={product.description}
                 price={product.price}
                 image={product.image}
+                category={product.category}
                 rating={product.rating}
               />
             ))}

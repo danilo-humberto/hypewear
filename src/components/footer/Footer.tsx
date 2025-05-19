@@ -17,7 +17,7 @@ const Footer = () => {
             />
             <p className="font-bold text-xl">HypeWear</p>
           </div>
-          <p className="text-foreground/70 text-sm w-1/2">
+          <p className="text-foreground/70 text-sm w-2/3 lg:w-1/2">
             HypeWear offers the latest fashion trends for men and women,
             combining style, quality, and affordability. Explore our curated
             collections to elevate your wardrobe effortlessly.
@@ -55,7 +55,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mr-12">
             <p className="font-bold">Company</p>
             <ul className="text-foreground/70">
               <li>

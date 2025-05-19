@@ -22,7 +22,7 @@ interface NavigationItemProps {
 const NavigationItem = ({ title, sections }: NavigationItemProps) => {
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger className="text-foreground">
+      <NavigationMenuTrigger className="text-background dark:text-foreground">
         {title}
       </NavigationMenuTrigger>
       <NavigationMenuContent>

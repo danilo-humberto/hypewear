@@ -5,7 +5,7 @@ import FlashSaleSwiper from "../FlashSaleSwiper";
 
 const Hero = () => {
   return (
-    <main className="w-full h-auto mt-[96px] relative">
+    <main id="top" className="w-full h-auto mt-[96px] relative scroll-mt-28">
       <img
         src="hero-img.jpg"
         alt="foto de uma menina usando roupas estilo streewear"

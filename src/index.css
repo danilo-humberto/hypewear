@@ -116,10 +116,12 @@
   }
   body {
     @apply bg-accent text-foreground;
+    @apply overflow-x-hidden;
   }
 
   html {
     @apply transition-colors duration-300 ease-in-out;
+    @apply scroll-smooth;
   }
 }
 

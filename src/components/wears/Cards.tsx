@@ -13,6 +13,7 @@ interface CardsProps {
   description: string;
   price: number;
   image: string;
+  category: string;
   rating: Rating;
 }
 
@@ -21,6 +22,7 @@ const Cards = ({
   description,
   price,
   image,
+  category,
   rating,
   id,
 }: CardsProps) => {
@@ -39,6 +41,9 @@ const Cards = ({
           <div className="overflow-hidden flex-auto">
             <p className="truncate">{title}</p>
             <p className="truncate text-muted-foreground">{description}</p>
+            <p className="truncate text-muted-foreground">
+              Category: {category}
+            </p>
           </div>
           <span className="font-bold">
             {new Intl.NumberFormat("en-US", {
