@@ -1,6 +1,7 @@
-![HypeWear Logo](public/logo-dark.png)
-
-<h1 align="center"> HypeWear</h1>
+<p align="center">
+  <img src="public/logo-dark.png" alt="HypeWear Logo" width="200">
+  <h1 align="center"> HypeWear</h1>
+</p>
 
 <p align="center">
   E-commerce de moda moderno e responsivo, desenvolvido como parte de uma prova do Instituto Federal de Pernambuco (IFPE).
