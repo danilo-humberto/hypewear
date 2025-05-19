@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="public/logo-dark.png" alt="HypeWear Logo" width="200">
-</p>
+![HypeWear Logo](public/logo-dark.png)
 
 <h1 align="center"> HypeWear</h1>
 
