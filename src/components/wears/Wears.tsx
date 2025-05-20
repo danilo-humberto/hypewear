@@ -1,5 +1,5 @@
 import { useAllProductsOrByCategory } from "@/hooks/queries/useProducts";
-import Cards from "./Cards";
+import Cards from "./ProductCards";
 import SelectType from "./SelectType";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
