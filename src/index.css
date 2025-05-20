@@ -147,3 +147,7 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.font-montserrat {
+  font-family: "Montserrat", sans-serif;
+}
