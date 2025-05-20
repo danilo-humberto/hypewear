@@ -6,7 +6,11 @@ import { useEffect, useRef, useState } from "react";
 
 const Wears = () => {
   const [selected, setSelected] = useState("");
-  const { data: products, isLoading } = useAllProductsOrByCategory(selected);
+  const {
+    data: products,
+    isLoading,
+    isError,
+  } = useAllProductsOrByCategory(selected);
   const wearsRef = useRef<HTMLDivElement>(null);
 
   const handleSelectChange = (value: string) => {
@@ -35,7 +39,13 @@ const Wears = () => {
           <div className="flex items-center justify-center w-full h-[300px]">
             <LoaderCircle size={30} className="animate-spin" />
           </div>
-        ) : products ? (
+        ) : isError ? (
+          <div className="flex items-center justify-center w-full h-[300px]">
+            <p className="text-red-500">
+              Error loading products. Please try again later.
+            </p>
+          </div>
+        ) : products && products.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(380px,1fr))] justify-center gap-4 lg:max-w-[90%] mx-auto">
             {products?.map((product: React.ComponentProps<typeof Cards>) => (
               <Cards

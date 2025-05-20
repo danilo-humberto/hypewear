@@ -16,7 +16,7 @@ interface SelectTypeProps {
 }
 
 const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
-  const { data: categories } = useCategories();
+  const { data: categories, isLoading, isError } = useCategories();
 
   return (
     <Select value={selected} onValueChange={handleSelectChange}>
@@ -26,7 +26,15 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
       <SelectContent side="left" position="popper" avoidCollisions={false}>
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
-          {categories ? (
+          {isLoading ? (
+            <SelectItem disabled value="loading">
+              Loading...
+            </SelectItem>
+          ) : isError ? (
+            <SelectItem disabled value="error">
+              Error loading categories
+            </SelectItem>
+          ) : categories ? (
             categories?.map((category: string, index: number) => (
               <SelectItem key={index} value={category} className="capitalize">
                 {category}
