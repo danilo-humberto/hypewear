@@ -28,9 +28,9 @@ const Cart = () => {
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="w-full overflow-y-scroll pb-[130px] [&>button]:hidden hide-scrollbar"
+        className="w-full overflow-y-scroll [&>button]:hidden hide-scrollbar"
       >
-        <SheetHeader className="fixed bg-background w-full lg:w-[20%] border-b border-b-muted-foreground flex-row justify-between">
+        <SheetHeader className="sticky top-0 bg-background w-full border-b border-b-muted-foreground flex-row justify-between">
           <div>
             <SheetTitle className="text-2xl">Cart</SheetTitle>
             <SheetDescription>Checkout</SheetDescription>
@@ -39,7 +39,7 @@ const Cart = () => {
             <X className="text-muted-foreground" />
           </SheetClose>
         </SheetHeader>
-        <div className="px-4 flex flex-col gap-2 mt-[100px]">
+        <div className="px-4 flex flex-col gap-2">
           {cart.map((item, index) => (
             <Card key={index} className="w-full h-[160px] flex-1">
               <CardContent className="flex gap-2">
@@ -90,7 +90,7 @@ const Cart = () => {
             </Card>
           ))}
         </div>
-        <SheetFooter className="p-0 fixed w-full lg:w-[20%] bottom-0 bg-background">
+        <SheetFooter className="p-0 sticky w-full bottom-0 bg-background">
           <div className="border-t border-t-muted-foreground p-4">
             <div className="flex justify-between items-center">
               <span className="font-bold text-xl">Total:</span>
