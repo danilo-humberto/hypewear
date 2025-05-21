@@ -71,14 +71,11 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="py-4 border-b border-b-accent text-center w-full md:w-[90%] mx-auto">
+      <div className="py-4 text-center w-full md:w-[90%] mx-auto">
         <p className="text-foreground/70 text-sm">
           &copy; {new Date().getFullYear()} HypeWear. All rights reserved
         </p>
       </div>
-      <p className="text-foreground/10 text-center text-8xl md:text-[12rem] lg:text-[15rem] xl:text-[18rem] 2xl:text-[20rem] lg:tracking-widest capitalize lg:mb-15">
-        hypwear
-      </p>
     </footer>
   );
 };
