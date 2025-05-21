@@ -39,17 +39,17 @@ const Cart = () => {
             <X className="text-muted-foreground" />
           </SheetClose>
         </SheetHeader>
-        <div className="px-4 flex flex-col gap-2">
+        <div className="px-2 flex flex-col gap-2">
           {cart.map((item, index) => (
             <Card key={index} className="w-full h-[160px] flex-1">
-              <CardContent className="flex gap-2 px-2">
+              <CardContent className="flex gap-2 px-2 w-full">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-24 h-[6.5rem] object-contain rounded-md"
+                  className="w-24 h-[6.5rem] object-contain rounded-md shrink-0"
                 />
-                <div className="flex flex-col gap-1 justify-between flex-1">
-                  <div className="flex flex-col gap-2 w-[220px]">
+                <div className="flex flex-col gap-1 justify-between flex-1 min-w-0">
+                  <div className="flex flex-col gap-2 min-w-0">
                     <p className="text-sm truncate">{item.title}</p>
                     <p className="truncate text-sm text-muted-foreground">
                       {item.description}
