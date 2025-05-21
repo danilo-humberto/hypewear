@@ -42,7 +42,7 @@ const Cart = () => {
         <div className="px-4 flex flex-col gap-2">
           {cart.map((item, index) => (
             <Card key={index} className="w-full h-[160px] flex-1">
-              <CardContent className="flex gap-2">
+              <CardContent className="flex gap-2 px-2">
                 <img
                   src={item.image}
                   alt={item.title}
@@ -62,7 +62,7 @@ const Cart = () => {
                         currency: "USD",
                       }).format(item.totalPrice)}
                     </span>
-                    <div className="flex border border-muted rounded-sm items-center">
+                    <div className="flex border border-muted rounded-sm items-center mr-2">
                       <Button
                         variant={"ghost"}
                         onClick={() => removeQuantityOrProduct(item.id)}

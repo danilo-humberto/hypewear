@@ -29,7 +29,7 @@ const Cards = ({
   const { addToCart: AddtoCart } = useCart();
   return (
     <Card className="shadow-none">
-      <CardContent className="w-full">
+      <CardContent className="w-full px-2">
         <div className="w-full h-[300px]">
           <img
             src={image}
@@ -56,8 +56,8 @@ const Cards = ({
           <Button variant={"outline"} onClick={() => AddtoCart(id)}>
             Add to Cart
           </Button>
-          <div className="flex items-center gap-2">
-            <span>( {rating.count} )</span>
+          <div className="flex gap-1 items-center">
+            <span>({rating.count})</span>
             <StarRating rating={rating.rate} />
           </div>
         </div>
