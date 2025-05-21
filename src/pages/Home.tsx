@@ -8,7 +8,7 @@ import Wears from "@/components/wears/Wears";
 import { ArrowUpFromDot } from "lucide-react";
 
 const Home = () => {
-  const baseUrl = process.env.PUBLIC_URL || "";
+  const baseUrl = import.meta.env.PUBLIC_URL || "";
   return (
     <div className="w-screen overflow-x-hidden">
       <Header baseUrl={baseUrl} />

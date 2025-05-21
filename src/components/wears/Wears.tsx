@@ -49,6 +49,7 @@ const Wears = () => {
           <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(380px,1fr))] justify-center gap-4 lg:max-w-[90%] mx-auto">
             {products?.map((product: React.ComponentProps<typeof Cards>) => (
               <Cards
+                key={product.id}
                 id={product.id}
                 title={product.title}
                 description={product.description}

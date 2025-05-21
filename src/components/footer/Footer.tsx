@@ -25,7 +25,7 @@ const Footer = ({ baseUrl }: FooterProps) => {
             />
             <p className="font-bold text-xl">HypeWear</p>
           </div>
-          <p className="text-foreground/70 text-sm w-2/3 lg:w-1/2">
+          <p className="text-foreground/70 text-sm w-full md:w-1/2 lg:w-1/2">
             HypeWear offers the latest fashion trends for men and women,
             combining style, quality, and affordability. Explore our curated
             collections to elevate your wardrobe effortlessly.
@@ -79,14 +79,11 @@ const Footer = ({ baseUrl }: FooterProps) => {
           </div>
         </div>
       </div>
-      <div className="py-4 border-b border-b-accent text-center w-full md:w-[90%] mx-auto">
+      <div className="py-4 text-center w-full md:w-[90%] mx-auto">
         <p className="text-foreground/70 text-sm">
           &copy; {new Date().getFullYear()} HypeWear. All rights reserved
         </p>
       </div>
-      <p className="text-foreground/10 text-center text-8xl md:text-[12rem] lg:text-[15rem] xl:text-[18rem] 2xl:text-[20rem] lg:tracking-widest capitalize lg:mb-15">
-        hypwear
-      </p>
     </footer>
   );
 };
