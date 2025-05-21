@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - cartFunction
+      - main
 permissions:
   contents: write
   pages: write
