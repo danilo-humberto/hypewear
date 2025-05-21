@@ -8,17 +8,18 @@ import Wears from "@/components/wears/Wears";
 import { ArrowUpFromDot } from "lucide-react";
 
 const Home = () => {
+  const baseUrl = process.env.PUBLIC_URL || "";
   return (
     <div className="w-screen overflow-x-hidden">
-      <Header />
+      <Header baseUrl={baseUrl} />
       <main className="flex flex-col w-full">
-        <Hero />
+        <Hero baseUrl={baseUrl} />
         <Wears />
         <FashionShowCase />
         <Highlights />
         <Questions />
       </main>
-      <Footer />
+      <Footer baseUrl={baseUrl} />
       <a
         href="#top"
         className="fixed bottom-4 right-4 bg-foreground z-40 p-3 rounded-full hover:bg-accent-foreground duration-200 transition-colors cursor-pointer"

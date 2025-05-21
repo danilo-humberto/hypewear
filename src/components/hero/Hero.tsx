@@ -3,8 +3,11 @@ import { ChevronRight } from "lucide-react";
 import Navigation from "./Navigation";
 import FlashSaleSwiper from "../FlashSaleSwiper";
 
-const Hero = () => {
-  const baseUrl = process.env.PUBLIC_URL || "";
+interface HeroProps {
+  baseUrl: string;
+}
+
+const Hero = ({ baseUrl }: HeroProps) => {
   return (
     <main id="top" className="w-full h-auto mt-[96px] relative scroll-mt-28">
       <img
