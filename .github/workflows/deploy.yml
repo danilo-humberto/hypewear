@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - cartFunction # dispara o deploy quando fizer push nessa branch
-
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +23,19 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifacts
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          name: "github-pages"
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifact: "github-pages"
