@@ -2,7 +2,11 @@ import { useTheme } from "@/hooks/theme-provider";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 
-const Footer = () => {
+interface FooterProps {
+  baseUrl: string;
+}
+
+const Footer = ({ baseUrl }: FooterProps) => {
   const { theme } = useTheme();
 
   return (
@@ -11,13 +15,17 @@ const Footer = () => {
         <div>
           <div className="flex items-center -ml-[10px]">
             <img
-              src={theme === "light" ? "/logo-light.png" : "/logo-dark.png"}
+              src={
+                theme === "light"
+                  ? `${baseUrl}logo-light.png`
+                  : `${baseUrl}/logo-dark.png`
+              }
               alt="logo da hypewear"
               className="w-12 h-11"
             />
             <p className="font-bold text-xl">HypeWear</p>
           </div>
-          <p className="text-foreground/70 text-sm w-2/3 lg:w-1/2">
+          <p className="text-foreground/70 text-sm w-full md:w-1/2 lg:w-1/2">
             HypeWear offers the latest fashion trends for men and women,
             combining style, quality, and affordability. Explore our curated
             collections to elevate your wardrobe effortlessly.

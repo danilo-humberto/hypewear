@@ -5,6 +5,7 @@
 
 <p align="center">
   E-commerce de moda moderno e responsivo, desenvolvido como parte de uma prova do Instituto Federal de Pernambuco (IFPE).
+  Acesse o site <a href="https://danilo-humberto.github.io/hypewear/" target="_blank">https://danilo-humberto.github.io/hypewear/</a>
 </p>
 
 ---
