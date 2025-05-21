@@ -15,7 +15,7 @@ const Hero = ({ baseUrl }: HeroProps) => {
         alt="foto de uma menina usando roupas estilo streewear"
         className="w-full h-screen object-cover brightness-30 z-0"
       />
-      <div className="z-10 absolute top-0 left-0 flex flex-col items-center justify-center gap-3 h-screen w-full p-4">
+      <div className="z-10 absolute -top-10 left-0 flex flex-col items-center justify-center gap-3 min-h-full w-full p-4">
         <Navigation />
         <h1 className="text-background dark:text-foreground text-6xl">
           HypeWear

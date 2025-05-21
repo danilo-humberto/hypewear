@@ -25,7 +25,7 @@ const Wears = () => {
 
   return (
     <div
-      className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-25vh] relative z-40"
+      className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-24vh] relative z-40"
       ref={wearsRef}
     >
       <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative">
