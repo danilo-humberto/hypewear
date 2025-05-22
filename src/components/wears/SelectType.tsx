@@ -23,7 +23,7 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
       <SelectTrigger className="w-[180px] capitalize cursor-pointer">
         <SelectValue placeholder="Select a Category" />
       </SelectTrigger>
-      <SelectContent side="left" position="popper" avoidCollisions={false}>
+      <SelectContent side="bottom" position="popper" avoidCollisions={false}>
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
           {isLoading ? (
