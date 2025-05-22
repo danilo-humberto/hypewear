@@ -12,7 +12,7 @@ const queryCliente = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryCliente}>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <CartProvider>
           <Toaster position="bottom-right" />
           <App />

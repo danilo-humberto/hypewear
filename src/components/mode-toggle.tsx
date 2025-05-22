@@ -8,14 +8,11 @@ export function ModeToggle() {
   const [openPop, setOpenPop] = useState(false);
   const { setTheme, theme } = useTheme();
 
-  const handleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-      setOpenPop(false);
-    } else {
-      setTheme("light");
-      setOpenPop(false);
+  const handleTheme = (selectedTheme: "light" | "dark") => {
+    if (theme !== selectedTheme) {
+      setTheme(selectedTheme);
     }
+    setOpenPop(false);
   };
 
   return (
@@ -40,14 +37,14 @@ export function ModeToggle() {
         <ul className="flex flex-col gap-2">
           <li
             className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm"
-            onClick={handleTheme}
+            onClick={() => handleTheme("light")}
           >
             Light
           </li>
           <Separator />
           <li
             className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm"
-            onClick={handleTheme}
+            onClick={() => handleTheme("dark")}
           >
             Dark
           </li>
