@@ -4,7 +4,7 @@ import NavigationItem from "./NavigationItem";
 
 const Navigation = () => {
   return (
-    <NavigationMenu className="absolute top-0 mt-2 w-screen hidden lg:block">
+    <NavigationMenu className="absolute top-10 mt-2 w-screen hidden lg:block">
       <NavigationMenuList className="w-full">
         {menuData.map((item, i) => (
           <NavigationItem key={i} title={item.title} sections={item.sections} />
