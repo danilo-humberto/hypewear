@@ -18,7 +18,7 @@ const Footer = ({ baseUrl }: FooterProps) => {
               src={
                 theme === "light"
                   ? `${baseUrl}logo-light.png`
-                  : `${baseUrl}/logo-dark.png`
+                  : `${baseUrl}logo-dark.png`
               }
               alt="logo da hypewear"
               className="w-12 h-11"
@@ -32,16 +32,16 @@ const Footer = ({ baseUrl }: FooterProps) => {
           </p>
           <div className="mt-2 flex gap-2">
             <a href="#">
-              <FaInstagram className="text-foreground/70 text-2xl" />
+              <FaInstagram className="text-foreground/70 text-2xl hover:text-foreground duration-300 transition-all" />
             </a>
             <a href="#">
-              <FaWhatsapp className="text-foreground/70 text-2xl" />
+              <FaWhatsapp className="text-foreground/70 text-2xl hover:text-foreground duration-300 transition-all" />
             </a>
             <a href="#">
-              <FaXTwitter className="text-foreground/70 text-2xl" />
+              <FaXTwitter className="text-foreground/70 text-2xl hover:text-foreground duration-300 transition-all" />
             </a>
             <a href="#">
-              <FaYoutube className="text-foreground/70 text-2xl" />
+              <FaYoutube className="text-foreground/70 text-2xl hover:text-foreground duration-300 transition-all" />
             </a>
           </div>
         </div>
