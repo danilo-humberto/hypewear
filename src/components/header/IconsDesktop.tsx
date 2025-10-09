@@ -1,9 +1,9 @@
-import { ChevronsUpDown, CircleUserRound, Cog, LogIn } from "lucide-react";
+import { ChevronsUpDown, CircleUserRound, LogIn } from "lucide-react";
 import { ModeToggle } from "../mode-toggle";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 import Cart from "./Cart";
+import { Link } from "react-router-dom";
 
 const IconsDesktop = () => {
   return (
@@ -22,17 +22,13 @@ const IconsDesktop = () => {
             </Button>
           </PopoverTrigger>
           <PopoverContent className="mr-12">
-            <ul className="flex flex-col gap-2">
-              <li className="flex items-center cursor-pointer gap-2 text-foreground/70 hover:bg-accent transition-all duration-300 p-2 rounded-sm">
-                <LogIn size={20} />
-                <a href="#">Login / Register</a>
-              </li>
-              <Separator />
-              <li className="flex items-center cursor-pointer gap-2 text-foreground/70 hover:bg-accent transition-all duration-300 p-2 rounded-sm">
-                <Cog size={20} />
-                <a href="#">Settings</a>
-              </li>
-            </ul>
+            <Link
+              to={"/auth/login"}
+              className="flex items-center cursor-pointer gap-2 text-foreground/70 hover:bg-accent transition-all duration-300 p-2 rounded-sm lg:text-sm"
+            >
+              <LogIn size={20} />
+              <span>Entrar</span>
+            </Link>
           </PopoverContent>
         </Popover>
       </div>
