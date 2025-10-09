@@ -36,14 +36,14 @@ export function ModeToggle() {
       <PopoverContent align="end" className="w-40">
         <ul className="flex flex-col gap-2">
           <li
-            className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm"
+            className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm lg:text-sm"
             onClick={() => handleTheme("light")}
           >
             Light
           </li>
           <Separator />
           <li
-            className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm"
+            className="cursor-pointer p-1 hover:bg-accent transition-all duration-300 rounded-sm lg:text-sm"
             onClick={() => handleTheme("dark")}
           >
             Dark
