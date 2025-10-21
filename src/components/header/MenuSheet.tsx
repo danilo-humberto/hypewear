@@ -8,18 +8,13 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Accordion } from "../ui/accordion";
-import {
-  CircleUserRound,
-  Menu,
-  ChevronsUpDown,
-  LogIn,
-  Cog,
-} from "lucide-react";
+import { CircleUserRound, Menu, ChevronsUpDown, LogIn } from "lucide-react";
 import { menuData } from "../menuData";
 import MenuSheetItem from "./MenuSheetItem";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 const MenuSheet = () => {
   const [open, setOpen] = useState(false);
 
@@ -58,13 +53,9 @@ const MenuSheet = () => {
               </PopoverTrigger>
               <PopoverContent>
                 <ul className="flex flex-col gap-2">
-                  <li className="flex items-center gap-2 text-foreground/70 border-b border-b-accent pb-2">
-                    <Cog size={20} />
-                    <a href="#">Settings</a>
-                  </li>
                   <li className="flex items-center gap-2 text-foreground/70">
                     <LogIn size={20} />
-                    <a href="#">Login / Register</a>
+                    <Link to="/auth/login">Entrar</Link>
                   </li>
                 </ul>
               </PopoverContent>
