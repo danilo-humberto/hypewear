@@ -9,7 +9,7 @@ interface HeroProps {
 
 const Hero = ({ baseUrl }: HeroProps) => {
   return (
-    <main id="top" className="w-full h-auto mt-[96px] relative scroll-mt-28">
+    <main id="top" className="w-full h-auto mt-[80px] relative scroll-mt-28">
       <img
         src={`${baseUrl}hero-img.jpg`}
         alt="foto de uma menina usando roupas estilo streewear"
