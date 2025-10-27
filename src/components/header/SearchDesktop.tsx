@@ -7,7 +7,7 @@ const SearchDesktop = () => {
       <input
         type="text"
         placeholder="Search"
-        className="bg-input pl-4 pr-12 py-2.5 rounded-xl outline-none text-foreground w-full placeholder:text-foreground text-sm"
+        className="bg-input pl-4 pr-12 py-2.5 rounded-xl outline-none text-foreground w-full placeholder:text-muted-foreground text-sm"
       />
     </div>
   );
