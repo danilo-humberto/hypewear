@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import DetailsProduct from "./pages/DetailsProduct";
 import Layout from "./pages/Layout";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -13,10 +14,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route element={<Layout />}>
           <Route path="/product/:id" element={<DetailsProduct />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

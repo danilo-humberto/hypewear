@@ -1,4 +1,4 @@
-import { ChevronsUpDown, CircleUserRound, LogIn } from "lucide-react";
+import { ChevronsUpDown, CircleUserRound, LogIn, User } from "lucide-react";
 import { ModeToggle } from "../mode-toggle";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
@@ -28,6 +28,13 @@ const IconsDesktop = () => {
             >
               <LogIn size={20} />
               <span>Entrar</span>
+            </Link>
+            <Link
+              to={"/profile"}
+              className="flex items-center cursor-pointer gap-2 text-foreground/70 hover:bg-accent transition-all duration-300 p-2 rounded-sm lg:text-sm"
+            >
+              <User size={20} />
+              <span>Perfil</span>
             </Link>
           </PopoverContent>
         </Popover>
