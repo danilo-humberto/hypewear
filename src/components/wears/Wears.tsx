@@ -1,4 +1,4 @@
-import { useAllProductsOrByCategory } from "@/hooks/queries/useProducts";
+import { useProducts } from "@/hooks/queries/useProducts";
 import Cards from "./ProductCards";
 import SelectType from "./SelectType";
 import { LoaderCircle } from "lucide-react";
@@ -6,15 +6,11 @@ import { useEffect, useRef, useState } from "react";
 
 const Wears = () => {
   const [selected, setSelected] = useState("");
-  const {
-    data: products,
-    isLoading,
-    isError,
-  } = useAllProductsOrByCategory(selected);
+  const { data: products, isLoading, isError } = useProducts();
   const wearsRef = useRef<HTMLDivElement>(null);
 
   const handleSelectChange = (value: string) => {
-    setSelected(value === "All" ? "All" : value);
+    setSelected(value === "Todos" ? "Todos" : value);
   };
 
   useEffect(() => {
@@ -51,12 +47,11 @@ const Wears = () => {
               <Cards
                 key={product.id}
                 id={product.id}
-                title={product.title}
+                name={product.name}
                 description={product.description}
                 price={product.price}
                 image={product.image}
                 category={product.category}
-                rating={product.rating}
               />
             ))}
           </div>
