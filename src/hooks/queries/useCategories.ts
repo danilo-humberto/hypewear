@@ -1,4 +1,4 @@
-import { getCategories } from "@/api/endpoints";
+import { getCategories } from "@/api/categories.endpoint";
 import { useQuery } from "@tanstack/react-query";
 
 export const useCategories = () =>

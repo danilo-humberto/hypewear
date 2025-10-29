@@ -10,6 +10,11 @@ import {
 } from "../ui/select";
 import { useCategories } from "@/hooks/queries/useCategories";
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 interface SelectTypeProps {
   selected: string;
   handleSelectChange: (value: string) => void;
@@ -26,22 +31,32 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
       <SelectContent side="bottom" position="popper" avoidCollisions={false}>
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
-          {isLoading ? (
+          {isLoading && (
             <SelectItem disabled value="loading">
-              Loading...
+              Carregando...
             </SelectItem>
-          ) : isError ? (
+          )}
+
+          {isError && (
             <SelectItem disabled value="error">
-              Error loading categories
+              Erro ao carregar as categorias
             </SelectItem>
-          ) : categories ? (
-            categories?.map((category: string, index: number) => (
-              <SelectItem key={index} value={category} className="capitalize">
-                {category}
+          )}
+
+          {!isLoading && !isError && categories.length > 0 ? (
+            categories.map((category: Category) => (
+              <SelectItem
+                key={category.id}
+                value={category.name}
+                className="capitalize"
+              >
+                {category.name}
               </SelectItem>
             ))
           ) : (
-            <SelectItem value="No categories">No categories</SelectItem>
+            <SelectItem disabled value="empty">
+              Nenhuma categoria encontrada
+            </SelectItem>
           )}
         </SelectGroup>
         <SelectSeparator />
