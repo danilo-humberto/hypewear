@@ -38,7 +38,7 @@ const Wears = () => {
         ) : isError ? (
           <div className="flex items-center justify-center w-full h-[300px]">
             <p className="text-red-500">
-              Error loading products. Please try again later.
+              Erro ao carregar os produtos. Tente novamente mais tarde!
             </p>
           </div>
         ) : products && products.length > 0 ? (
@@ -50,7 +50,7 @@ const Wears = () => {
                 name={product.name}
                 description={product.description}
                 price={product.price}
-                image={product.image}
+                imagem={product.imagem}
                 category={product.category}
               />
             ))}
