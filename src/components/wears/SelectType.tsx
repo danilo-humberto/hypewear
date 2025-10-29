@@ -26,7 +26,7 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
   return (
     <Select value={selected} onValueChange={handleSelectChange}>
       <SelectTrigger className="w-[180px] capitalize cursor-pointer">
-        <SelectValue placeholder="Select a Category" />
+        <SelectValue placeholder="Categorias" />
       </SelectTrigger>
       <SelectContent side="bottom" position="popper" avoidCollisions={false}>
         <SelectGroup>
@@ -34,12 +34,6 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
           {isLoading && (
             <SelectItem disabled value="loading">
               Carregando...
-            </SelectItem>
-          )}
-
-          {isError && (
-            <SelectItem disabled value="error">
-              Erro ao carregar as categorias
             </SelectItem>
           )}
 
@@ -59,12 +53,16 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
             </SelectItem>
           )}
         </SelectGroup>
-        <SelectSeparator />
-        <SelectGroup>
-          <SelectItem value="All" className="capitalize">
-            All
-          </SelectItem>
-        </SelectGroup>
+        {categories.length === 0 && (
+          <>
+            <SelectSeparator />
+            <SelectGroup>
+              <SelectItem value="All" className="capitalize">
+                All
+              </SelectItem>
+            </SelectGroup>
+          </>
+        )}
       </SelectContent>
     </Select>
   );
