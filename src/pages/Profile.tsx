@@ -81,7 +81,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] py-4 gap-2 flex-col md:flex-row">
+    <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] py-4 px-2 gap-2 flex-col md:flex-row">
       <div className="w-full flex flex-col">
         <Card className="w-full shadow-md border border-border/50">
           <CardHeader className="flex flex-col items-center text-center">
