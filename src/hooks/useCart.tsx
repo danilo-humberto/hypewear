@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useQueryClient } from "@tanstack/react-query";
-import { getProduct } from "@/api/endpoints";
+import { getProduct } from "@/api/products.endpoint";
 import React, { useState, createContext, useContext } from "react";
 import { toast } from "sonner";
 
