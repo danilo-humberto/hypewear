@@ -1,10 +1,47 @@
 import Forms from "@/components/auth/Forms";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/hooks/queries/useAuth";
 import { useTheme } from "@/hooks/theme-provider";
-import { Link } from "react-router-dom";
+import { setClientData } from "@/utils/storage";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const { theme } = useTheme();
+  const { loginMutation } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = (
+    e: React.FormEvent,
+    email: string,
+    password: string
+  ) => {
+    e.preventDefault();
+
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          const client = {
+            access_token: data.access_token,
+            client: { ...data.client },
+          };
+          setClientData("client", client);
+          toast.success("Login realizado com sucesso!");
+          navigate("/");
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error)) {
+            toast.error("Credenciais Inválidas!");
+          } else {
+            toast.error("Ocorreu um erro inesperado!");
+          }
+        },
+      }
+    );
+  };
+
   return (
     <div className="flex">
       <figure className="flex-2 max-h-screen overflow-hidden hidden lg:block">
@@ -29,7 +66,10 @@ const Login = () => {
               Insira seu e-mail e sua senha para continuar
             </p>
           </div>
-          <Forms />
+          <Forms
+            handleLogin={handleSubmit}
+            isPending={loginMutation.isPending}
+          />
           <Separator className="my-3 max-w-sm" />
           <div className="flex flex-col items-center justify-center">
             <p className="text-sm text-muted-foreground md:text-xs">
