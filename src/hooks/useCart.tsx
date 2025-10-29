@@ -1,29 +1,25 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useQueryClient } from "@tanstack/react-query";
-import { getProduct } from "@/api/endpoints";
+import { getProduct } from "@/api/products.endpoint";
 import React, { useState, createContext, useContext } from "react";
 import { toast } from "sonner";
 
 interface Product {
-  id: number;
-  title: string;
+  id: string;
+  name: string;
   price: number;
   description: string;
   category: string;
-  image: string;
+  imagem: string;
   quantity: number;
   totalPrice: number;
-  rating: {
-    rate: number;
-    count: number;
-  };
 }
 
 interface CartContextType {
   cart: Product[];
-  addToCart: (id: number) => Promise<void>;
-  removeQuantityOrProduct: (id: number) => void;
-  addQuantity: (id: number) => void;
+  addToCart: (id: string) => Promise<void>;
+  removeQuantityOrProduct: (id: string) => void;
+  addQuantity: (id: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -31,7 +27,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<Product[]>([]);
   const queryClient = useQueryClient();
-  const addToCart = async (id: number) => {
+  const addToCart = async (id: string) => {
     try {
       let product = queryClient.getQueryData<Product>(["product", id]);
       if (!product) product = await getProduct(id);
@@ -75,7 +71,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const removeQuantityOrProduct = (id: number) => {
+  const removeQuantityOrProduct = (id: string) => {
     setCart((prev) => {
       const existingProduct = prev.find((item) => item.id === id);
 
@@ -101,7 +97,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const addQuantity = (id: number) => {
+  const addQuantity = (id: string) => {
     setCart((prev) => {
       return prev.map((item) => {
         if (item.id === id) {

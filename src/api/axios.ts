@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from "axios";
 
 const api = axios.create({
@@ -23,3 +24,15 @@ api.interceptors.request.use(
 );
 
 export default api;
+=======
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "http://localhost:3000",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export default api;
+>>>>>>> 42a1f3cbd5db1f33419d4359669e3b3889a17931

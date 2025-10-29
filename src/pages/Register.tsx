@@ -1,10 +1,40 @@
 import Forms from "@/components/auth/Forms";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/hooks/queries/useAuth";
 import { useTheme } from "@/hooks/theme-provider";
-import { Link } from "react-router-dom";
+import type { RegisterDto } from "@/types/auth";
+import { setClientData } from "@/utils/storage";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Register = () => {
   const { theme } = useTheme();
+  const { registerMutation } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent, credentials: RegisterDto) => {
+    e.preventDefault();
+
+    registerMutation.mutate(
+      { ...credentials },
+      {
+        onSuccess: (data) => {
+          const client = {
+            access_token: data.access_token,
+            client: { ...data.client },
+          };
+          setClientData("client", client);
+          toast.success("Cadastro realizado com sucesso!");
+          navigate("/");
+        },
+        onError: () => {
+          toast.error(
+            "Ocorreu um erro inesperado! Tente novamente mais tarde."
+          );
+        },
+      }
+    );
+  };
   return (
     <div className="flex flex-row-reverse">
       <figure className="flex-2 max-h-screen overflow-hidden hidden lg:block">
@@ -29,7 +59,10 @@ const Register = () => {
               Preencha os campos abaixo para criar a sua conta
             </p>
           </div>
-          <Forms />
+          <Forms
+            handleRegister={handleSubmit}
+            isPending={registerMutation.isPending}
+          />
           <Separator className="my-3 max-w-sm" />
           <div className="flex flex-col items-center justify-center">
             <p className="text-sm text-muted-foreground md:text-xs">

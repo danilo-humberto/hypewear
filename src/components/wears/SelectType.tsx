@@ -10,6 +10,11 @@ import {
 } from "../ui/select";
 import { useCategories } from "@/hooks/queries/useCategories";
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 interface SelectTypeProps {
   selected: string;
   handleSelectChange: (value: string) => void;
@@ -21,35 +26,43 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
   return (
     <Select value={selected} onValueChange={handleSelectChange}>
       <SelectTrigger className="w-[180px] capitalize cursor-pointer">
-        <SelectValue placeholder="Select a Category" />
+        <SelectValue placeholder="Categorias" />
       </SelectTrigger>
       <SelectContent side="bottom" position="popper" avoidCollisions={false}>
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
-          {isLoading ? (
+          {isLoading && (
             <SelectItem disabled value="loading">
-              Loading...
+              Carregando...
             </SelectItem>
-          ) : isError ? (
-            <SelectItem disabled value="error">
-              Error loading categories
-            </SelectItem>
-          ) : categories ? (
-            categories?.map((category: string, index: number) => (
-              <SelectItem key={index} value={category} className="capitalize">
-                {category}
+          )}
+
+          {!isLoading && !isError && categories.length > 0 ? (
+            categories.map((category: Category) => (
+              <SelectItem
+                key={category.id}
+                value={category.name}
+                className="capitalize"
+              >
+                {category.name}
               </SelectItem>
             ))
           ) : (
-            <SelectItem value="No categories">No categories</SelectItem>
+            <SelectItem disabled value="empty">
+              Nenhuma categoria encontrada
+            </SelectItem>
           )}
         </SelectGroup>
-        <SelectSeparator />
-        <SelectGroup>
-          <SelectItem value="All" className="capitalize">
-            All
-          </SelectItem>
-        </SelectGroup>
+        {categories.length === 0 && (
+          <>
+            <SelectSeparator />
+            <SelectGroup>
+              <SelectItem value="All" className="capitalize">
+                All
+              </SelectItem>
+            </SelectGroup>
+          </>
+        )}
       </SelectContent>
     </Select>
   );

@@ -44,13 +44,13 @@ const Cart = () => {
             <Card key={index} className="w-full h-[160px] flex-1">
               <CardContent className="flex gap-2 px-2 w-full">
                 <img
-                  src={item.image}
-                  alt={item.title}
+                  src={item.imagem}
+                  alt={item.name}
                   className="w-24 h-[6.5rem] object-contain rounded-md shrink-0"
                 />
                 <div className="flex flex-col gap-1 justify-between flex-1 min-w-0">
                   <div className="flex flex-col gap-2 min-w-0">
-                    <p className="text-sm truncate">{item.title}</p>
+                    <p className="text-sm truncate">{item.name}</p>
                     <p className="truncate text-sm text-muted-foreground">
                       {item.description}
                     </p>
