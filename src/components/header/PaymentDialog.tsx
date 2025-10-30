@@ -6,33 +6,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from "../ui/dialog";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import type { Order, PaymentMethodType } from "../../types/payments";
-import { getClientData } from "@/utils/storage"; 
-
-async function callCreatePaymentApi(
-  dto: {
-    orderId: string;
-    method: PaymentMethodType;
-    value: number;
-  },
-  token: string,
-) {
-  const response = await fetch("/payments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(dto),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Falha ao processar pagamento");
-  }
-  return response.json();
-}
+import { getClientData } from "@/utils/storage";
+import { useCreatePaymentMutation } from "../../hooks/queries/usePayments";
+import { toast } from "sonner";
 
 interface PaymentDialogProps {
   order: Order;
@@ -40,38 +20,37 @@ interface PaymentDialogProps {
 }
 
 export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
-  const authData = getClientData("client");
+  const createPayment = useCreatePaymentMutation();
+
   const [selectedMethod, setSelectedMethod] =
     useState<PaymentMethodType | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleConfirmPayment = async () => {
+    const authData = getClientData("client");
+
     if (!selectedMethod || !authData || !authData.access_token) {
-      alert("Selecione um método de pagamento e esteja logado.");
+      toast.error("Selecione um método e esteja logado.");
       return;
     }
 
-    setIsProcessing(true);
-    try {
-      const createPaymentDto = {
-        orderId: order.id,
-        method: selectedMethod,
-        value: order.total,
-      };
+    const paymentDto = {
+      orderId: order.id,
+      method: selectedMethod,
+      value: order.total,
+    };
 
-      const newPayment = await callCreatePaymentApi(
-        createPaymentDto,
-        authData.access_token,
-      );
-
-      console.log("Pagamento criado!", newPayment);
-      onOpenChange(false);
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message);
-    } finally {
-      setIsProcessing(false);
-    }
+    createPayment.mutate(
+      { dto: paymentDto, token: authData.access_token },
+      {
+        onSuccess: (updatedOrder: Order) => {
+          toast.success("Pagamento criado com sucesso!");
+          onOpenChange(false);
+        },
+        onError: (error: Error) => {
+          toast.error(error.message || "Falha ao processar pagamento.");
+        },
+      },
+    );
   };
 
   return (
@@ -88,22 +67,40 @@ export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
       </DialogHeader>
 
       <div className="py-4">
-        {/* ... (JSX do RadioGroup) ... */}
+        <h4 className="mb-4 font-medium">Selecione o método:</h4>
+        <RadioGroup
+          onValueChange={(value) =>
+            setSelectedMethod(value as PaymentMethodType)
+          }
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="PIX" id="PIX" />
+            <Label htmlFor="PIX">PIX</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="CARTAO" id="CARTAO" />
+            <Label htmlFor="CARTAO">Cartão de Crédito</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="BOLETO" id="BOLETO" />
+            <Label htmlFor="BOLETO">Boleto</Label>
+          </div>
+        </RadioGroup>
       </div>
 
       <DialogFooter>
         <Button
           variant="outline"
           onClick={() => onOpenChange(false)}
-          disabled={isProcessing}
+          disabled={createPayment.isPending}
         >
           Cancelar
         </Button>
         <Button
           onClick={handleConfirmPayment}
-          disabled={!selectedMethod || isProcessing}
+          disabled={!selectedMethod || createPayment.isPending}
         >
-          {isProcessing ? "Processando..." : "Confirmar Pagamento"}
+          {createPayment.isPending ? "Processando..." : "Confirmar Pagamento"}
         </Button>
       </DialogFooter>
     </DialogContent>

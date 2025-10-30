@@ -1,5 +1,6 @@
 import { useCart } from "@/hooks/useCart";
-import { getClientData } from "@/utils/storage"; // <-- CORRIGIDO
+import { getClientData } from "@/utils/storage";
+import { useCreateOrderMutation } from "../../hooks/queries/useOrders";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import {
   Sheet,
@@ -17,86 +18,45 @@ import { useState, useMemo } from "react";
 import { Dialog } from "../ui/dialog";
 import { PaymentDialog } from "./PaymentDialog";
 import type { Order } from "../../types/payments";
-
-async function createOrderInBackend(
-  cartItems: any[],
-  clientId: string,
-  token: string,
-): Promise<Order> {
-  const createOrderDto = {
-    clientId: clientId,
-    items: cartItems.map((item) => ({
-      productId: item.id,
-      quantity: item.quantity,
-    })),
-  };
-
-  const response = await fetch("/orders", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(createOrderDto),
-  });
-
-  const contentType = response.headers.get("content-type");
-  let responseData;
-
-  if (contentType && contentType.indexOf("application/json") !== -1) {
-    responseData = await response.json();
-  } else {
-    responseData = await response.text();
-  }
-
-  if (!response.ok) {
-
-    if (typeof responseData === "object" && responseData.message) {
-      throw new Error(responseData.message);
-    }
-    throw new Error(responseData || `Falha na requisição: ${response.statusText}`);
-  }
-  if (typeof responseData !== "object" || !responseData.id) {
-    throw new Error("O backend não retornou um pedido válido.");
-  }
-  
-  return responseData as Order;
-}
+import { toast } from "sonner";
 
 const Cart = () => {
   const { cart, removeQuantityOrProduct, addQuantity } = useCart();
+  const createOrder = useCreateOrderMutation();
 
-  const authData = getClientData("client");
-
-  const [isLoading, setIsLoading] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
 
   const handleCheckout = async () => {
     if (cart.length === 0) return;
 
+    const authData = getClientData("client");
+
     if (!authData || !authData.client || !authData.access_token) {
-      console.error("Usuário não logado. Redirecionando para o login...");
+      toast.error("Você precisa estar logado para finalizar a compra.");
       return;
     }
 
-    setIsLoading(true);
-    try {
+    const orderDto = {
+      clientId: authData.client.id,
+      items: cart.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+    };
 
-      const newOrder = await createOrderInBackend(
-        cart,
-        authData.client.id, 
-        authData.access_token, 
-      );
-
-      setCreatedOrder(newOrder);
-      setIsPaymentOpen(true);
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+    createOrder.mutate(
+      { dto: orderDto, token: authData.access_token },
+      {
+        onSuccess: (newOrder: Order) => {
+          setCreatedOrder(newOrder);
+          setIsPaymentOpen(true);
+        },
+        onError: (error: Error) => {
+          toast.error(error.message || "Falha ao criar pedido.");
+        },
+      },
+    );
   };
 
   const total = useMemo(() => {
@@ -130,16 +90,8 @@ const Cart = () => {
               <X className="text-muted-foreground" />
             </SheetClose>
           </SheetHeader>
+
           <div className="px-2 flex flex-col gap-2">
-            {cart.length === 0 ? (
-              <p className="text-muted-foreground text-center py-4">
-                Seu carrinho está vazio.
-              </p>
-            ) : (
-              cart.map((item) => (
-                <Card key={item.id} className="w-full h-[160px] flex-1">
-                  <CardContent className="flex gap-2 px-2 w-full">
-                    <div className="px-2 flex flex-col gap-2">
             {cart.length === 0 ? (
               <p className="text-muted-foreground text-center py-4">
                 Seu carrinho está vazio.
@@ -196,11 +148,7 @@ const Cart = () => {
               ))
             )}
           </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
+
           <SheetFooter className="p-0 sticky w-full bottom-0 bg-background">
             <div className="border-t border-t-muted-foreground p-4">
               <div className="flex justify-between items-center">
@@ -215,9 +163,9 @@ const Cart = () => {
               <Button
                 className="w-full mt-5 h-[5vh]"
                 onClick={handleCheckout}
-                disabled={isLoading || cart.length === 0}
+                disabled={createOrder.isPending || cart.length === 0}
               >
-                {isLoading ? "Criando pedido..." : "Checkout"}
+                {createOrder.isPending ? "Criando pedido..." : "Checkout"}
               </Button>
             </div>
           </SheetFooter>

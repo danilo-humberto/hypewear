@@ -1,4 +1,13 @@
-export type PaymentMethodType = "CARTAO" | "BOLETO" | "PIX";
+
+interface CreateOrderItemDto {
+  productId: string;
+  quantity: number;
+}
+
+export interface CreateOrderDto {
+  clientId: string;
+  items: CreateOrderItemDto[];
+}
 
 export type OrderStatus =
   | "ABERTO"
@@ -15,10 +24,4 @@ export interface Order {
   totalQuantity: number;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface CreatePaymentDto {
-  orderId: string;
-  method: PaymentMethodType;
-  value: number;
 }
