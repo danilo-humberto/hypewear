@@ -28,7 +28,7 @@ const IconsDesktop = () => {
     }
   };
   return (
-    <div className="hidden lg:flex items-center gap-2 absolute right-10">
+    <div className="hidden lg:flex items-center gap-2 absolute right-18">
       <ModeToggle />
       <Cart />
       <div className="flex items-center gap-1 cursor-pointer p-2">

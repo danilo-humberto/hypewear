@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Logo = () => {
   const { theme } = useTheme();
   return (
-    <div className="absolute z-50 left-2 sm:left-5 xl:left-10">
+    <div className="absolute z-50 left-2 sm:left-5 xl:left-18">
       <Link to={"/"} className="flex items-center">
         <img
           src={theme === "light" ? `/logo-light.png` : `/logo-dark.png`}
