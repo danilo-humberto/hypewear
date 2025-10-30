@@ -1,7 +1,13 @@
+import type { ProductFilters } from "@/types/productFilters";
 import api from "./axios";
 
-export const getProducts = async () => {
-  const { data } = await api.get("/product");
+export const getProducts = async (params: ProductFilters) => {
+  const queries = Object.fromEntries(
+    Object.entries(params).filter(
+      ([, value]) => value !== undefined && value !== "" && value !== null
+    )
+  );
+  const { data } = await api.get("/product", { params: queries });
   return data;
 };
 

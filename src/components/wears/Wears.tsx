@@ -1,23 +1,20 @@
 import { useProducts } from "@/hooks/queries/useProducts";
 import Cards from "./ProductCards";
-import SelectType from "./SelectType";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import FiltersBar from "./FiltersBar";
+import type { ProductFilters } from "@/types/productFilters";
 
 const Wears = () => {
-  const [selected, setSelected] = useState("");
-  const { data: products, isLoading, isError } = useProducts();
+  const [filters, setFilters] = useState<ProductFilters>({});
+  const { data: products, isLoading, isError } = useProducts(filters);
   const wearsRef = useRef<HTMLDivElement>(null);
 
-  const handleSelectChange = (value: string) => {
-    setSelected(value === "Todos" ? "Todos" : value);
-  };
-
   useEffect(() => {
-    if (!isLoading && selected !== "") {
+    if (!isLoading && filters.nameCategory !== "") {
       wearsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [isLoading, selected]);
+  }, [isLoading, filters.nameCategory]);
 
   return (
     <div
@@ -25,11 +22,8 @@ const Wears = () => {
       ref={wearsRef}
     >
       <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative">
-        <div className="flex items-center justify-end mb-8 lg:max-w-[90%] mx-auto">
-          <SelectType
-            handleSelectChange={handleSelectChange}
-            selected={selected}
-          />
+        <div className="flex flex-col lg:flex-row items-center mt-4 mb-6 lg:max-w-[90%] mx-auto gap-4">
+          <FiltersBar value={filters} onChange={setFilters} />
         </div>
         {isLoading ? (
           <div className="flex items-center justify-center w-full h-[300px]">
@@ -57,7 +51,7 @@ const Wears = () => {
           </div>
         ) : (
           <div className="flex items-center justify-center w-full h-[300px]">
-            <p className="text-muted-foreground">No products found</p>
+            <p className="text-muted-foreground">Nenhum Produto Encontrado!</p>
           </div>
         )}
       </div>
