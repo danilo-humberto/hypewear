@@ -1,21 +1,13 @@
 import { useTheme } from "@/hooks/theme-provider";
 import { Link } from "react-router-dom";
 
-interface LogoProps {
-  baseUrl: string;
-}
-
-const Logo = ({ baseUrl }: LogoProps) => {
+const Logo = () => {
   const { theme } = useTheme();
   return (
     <div className="absolute z-50 left-2 sm:left-5 xl:left-10">
       <Link to={"/"} className="flex items-center">
         <img
-          src={
-            theme === "light"
-              ? `${baseUrl}logo-light.png`
-              : `${baseUrl}logo-dark.png`
-          }
+          src={theme === "light" ? `/logo-light.png` : `/logo-dark.png`}
           alt="logo da HypeWear"
           className="w-12 h-11"
         />

@@ -3,15 +3,11 @@ import { ChevronRight } from "lucide-react";
 import Navigation from "./Navigation";
 import FlashSaleSwiper from "../FlashSaleSwiper";
 
-interface HeroProps {
-  baseUrl: string;
-}
-
-const Hero = ({ baseUrl }: HeroProps) => {
+const Hero = () => {
   return (
     <main id="top" className="w-full h-auto mt-[80px] relative scroll-mt-28">
       <img
-        src={`${baseUrl}hero-img.jpg`}
+        src={`/hero-img.jpg`}
         alt="foto de uma menina usando roupas estilo streewear"
         className="w-full h-screen object-cover brightness-30 z-0"
       />
