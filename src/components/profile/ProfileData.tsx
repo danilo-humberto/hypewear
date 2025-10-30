@@ -9,8 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Edit, Star, Trash2 } from "lucide-react";
+import { CalendarArrowUp, Edit, Mail, Phone, Star, Trash2 } from "lucide-react";
 import React from "react";
+import { format } from "date-fns";
 
 import type { Address, User } from "@/types/Profile";
 
@@ -71,8 +72,20 @@ const ProfileData: React.FC<ProfileDataProps> = ({
     <Card className="w-full flex flex-col shadow-md border border-border/50">
       <CardHeader className="flex flex-col items-center text-center">
         <CardTitle className="text-xl font-semibold">{user.name}</CardTitle>
-        <p className="text-sm text-muted-foreground">{user.email}</p>
-        <p className="text-sm text-muted-foreground">{user.numberPhone}</p>
+        <div className="flex flex-col lg:flex-row items-center gap-4">
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <Phone size={16} /> {user.numberPhone}
+            </p>
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <CalendarArrowUp size={16} />{" "}
+              {format(user.createdAt, "dd/MM/yyyy")}
+            </p>
+          </div>
+          <p className="text-sm text-muted-foreground flex items-center gap-2">
+            <Mail size={16} /> {user.email}
+          </p>
+        </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
