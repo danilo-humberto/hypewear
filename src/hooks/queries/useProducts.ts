@@ -1,10 +1,11 @@
 import { getProduct, getProducts } from "@/api/products.endpoint";
+import type { ProductFilters } from "@/types/productFilters";
 import { useQuery } from "@tanstack/react-query";
 
-export const useProducts = () =>
+export const useProducts = (filters: ProductFilters) =>
   useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
+    queryKey: ["products", filters],
+    queryFn: () => getProducts(filters),
     retry: 2,
   });
 
