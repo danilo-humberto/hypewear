@@ -14,10 +14,13 @@ import { useGetOrders } from "@/hooks/queries/useOrders";
 import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import type { Order } from "@/types/Order";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import OrderInformation from "@/components/profile/OrderInformation";
 
 const Profile = () => {
   const client = getClientData("client");
   const clientId = client.client.id;
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const { data: user, isLoading } = useClient(clientId);
   const { data: addresses = [] } = useGetAddresses(clientId);
@@ -95,7 +98,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] py-4 gap-2 flex-col md:flex-row">
+    <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] p-2 gap-2 flex-col md:flex-row">
       <ProfileData
         client={user}
         addresses={addresses || []}
@@ -112,55 +115,62 @@ const Profile = () => {
         setIsAddressModalOpen={setIsAddressModalOpen}
         addAddress={handleAddAddress}
       />
-      <Card className="w-full shadow-md border border-border/50">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold">
-            Histórico de Pedidos
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <Separator />
-          {orders.length === 0 ? (
-            <p className="text-muted-foreground text-center py-6">
-              Você ainda não possui pedidos.
-            </p>
-          ) : (
-            orders.map((order: Order) => (
-              <div
-                key={order.id}
-                className="border p-3 rounded-md flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-medium">Pedido #{order.id}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Data:{" "}
-                    {new Date(order.createdAt).toLocaleDateString("pt-BR")}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium">
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(order.total)}
-                  </p>
-                  <p
-                    className={`text-sm ${
-                      order.status === "PAGO"
-                        ? "text-green-600"
-                        : order.status === "CANCELADO"
-                        ? "text-red-500"
-                        : "text-yellow-500"
-                    }`}
+      <Dialog>
+        <Card className="w-full shadow-md border border-border/50">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold">
+              Histórico de Pedidos
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            <Separator />
+            {orders.length === 0 ? (
+              <p className="text-muted-foreground text-center py-6">
+                Você ainda não possui pedidos.
+              </p>
+            ) : (
+              orders.map((order: Order) => (
+                <DialogTrigger asChild key={order.id} className="">
+                  <button
+                    onClick={() => setSelectedOrder(order)}
+                    className="border p-3 gap-2 rounded-md flex justify-between items-center cursor-pointer"
                   >
-                    {order.status}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
+                    <div className="text-left">
+                      <p className="font-medium">Pedido #{order.id}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Data:{" "}
+                        {new Date(order.createdAt).toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">
+                        {new Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        }).format(order.total)}
+                      </p>
+                      <p
+                        className={`text-sm wrap-anywhere ${
+                          order.status === "PAGO"
+                            ? "text-green-600"
+                            : order.status === "CANCELADO"
+                            ? "text-red-500"
+                            : "text-yellow-500"
+                        }`}
+                      >
+                        {order.status}
+                      </p>
+                    </div>
+                  </button>
+                </DialogTrigger>
+              ))
+            )}
+          </CardContent>
+        </Card>
+        <DialogContent className="w-full lg:min-w-lg">
+          <OrderInformation order={selectedOrder} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
