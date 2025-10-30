@@ -27,47 +27,47 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<Product[]>([]);
   const queryClient = useQueryClient();
+
   const addToCart = async (id: string) => {
     try {
       let product = queryClient.getQueryData<Product>(["product", id]);
       if (!product) product = await getProduct(id);
 
-      if (!product) {
-        toast.error("Product not found. Please try again.");
+      if (!product || !product.id || !product.name || typeof product.price === 'undefined') {
+        toast.error("Produto não encontrado ou inválido. Tente novamente.");
         return;
       }
 
-      if (product) {
-        setCart((prevCart) => {
-          const existingProduct = prevCart.find((item) => item.id === id);
-          if (existingProduct) {
-            const updatedCart = prevCart.map((item) => {
-              if (item.id === id) {
-                const newQuantity = item.quantity + 1;
-                const totalPrice =
-                  item.quantity >= 1 ? item.price * newQuantity : item.price;
-                return {
-                  ...item,
-                  quantity: newQuantity,
-                  totalPrice,
-                };
-              } else {
-                return item;
-              }
-            });
-            return updatedCart;
-          } else {
-            const updatedCart = [
-              ...prevCart,
-              { ...product, quantity: 1, totalPrice: product.price },
-            ];
-            return updatedCart;
-          }
-        });
-        toast.success(`Product added to cart`);
-      }
-    } catch {
-      toast.error("Error adding product. Please try again.");
+      setCart((prevCart) => {
+        const existingProduct = prevCart.find((item) => item.id === id);
+        if (existingProduct) {
+          const updatedCart = prevCart.map((item) => {
+            if (item.id === id) {
+              const newQuantity = item.quantity + 1;
+              const totalPrice = item.price * newQuantity;
+              return {
+                ...item,
+                quantity: newQuantity,
+                totalPrice,
+              };
+            } else {
+              return item;
+            }
+          });
+          return updatedCart;
+        } else {
+          const updatedCart = [
+            ...prevCart,
+            { ...product, quantity: 1, totalPrice: product.price },
+          ];
+          return updatedCart;
+        }
+      });
+      toast.success(`Product added to cart`);
+
+    } catch (error) {
+      console.error("Falha ao adicionar produto:", error);
+      toast.error("Erro ao adicionar produto. Tente novamente.");
     }
   };
 
