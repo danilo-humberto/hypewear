@@ -33,7 +33,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       let product = queryClient.getQueryData<Product>(["product", id]);
       if (!product) product = await getProduct(id);
 
-      if (!product || !product.id || !product.name || typeof product.price === 'undefined') {
+      if (
+        !product ||
+        !product.id ||
+        !product.name ||
+        typeof product.price === "undefined"
+      ) {
         toast.error("Produto não encontrado ou inválido. Tente novamente.");
         return;
       }
@@ -63,8 +68,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           return updatedCart;
         }
       });
-      toast.success(`Product added to cart`);
-
+      toast.success(`${product.name} adicionado ao carrinho.`);
     } catch (error) {
       console.error("Falha ao adicionar produto:", error);
       toast.error("Erro ao adicionar produto. Tente novamente.");
