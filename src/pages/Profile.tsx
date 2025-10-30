@@ -1,23 +1,32 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { Separator } from "../components/ui/separator";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-
-import api from "../api/axios";
-import ProfileData from "../components/profile/ProfileData";
-import type { Address, Order, User } from "@/types/Profile";
+import { useState } from "react";
+import { getClientData } from "@/utils/storage";
+import ProfileData from "@/components/profile/ProfileData";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useClient, useUpdateClient } from "@/hooks/queries/useClient";
+import {
+  useGetAddresses,
+  useAddAddress,
+  useDeleteAddress,
+  useSetDefaultAddress,
+} from "@/hooks/queries/useAdresss";
+import { useGetOrders } from "@/hooks/queries/useOrders";
+import { useEffect } from "react";
+import { Separator } from "@radix-ui/react-separator";
+import type { Order } from "@/types/Order";
 
 const Profile = () => {
-  const DEVELOPER_USER_ID = "76a4a29b-07e8-4bb0-89a4-2d094ac3b158";
+  const client = getClientData("client");
+  const clientId = client.client.id;
 
-  const [user, setUser] = useState<User | null>(null);
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const { data: user, isLoading } = useClient(clientId);
+  const { data: addresses = [] } = useGetAddresses(clientId);
+  const { data: orders = [] } = useGetOrders(clientId);
+
+  const updateProfile = useUpdateClient(clientId);
+  const addAddress = useAddAddress(clientId);
+  const deleteAddress = useDeleteAddress(clientId);
+  const setDefault = useSetDefaultAddress(clientId);
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -27,6 +36,7 @@ const Profile = () => {
     email: "",
     numberPhone: "",
   });
+
   const [newAddress, setNewAddress] = useState({
     logradouro: "",
     numero: "",
@@ -37,87 +47,15 @@ const Profile = () => {
     complemento: "",
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get(`/clients/${DEVELOPER_USER_ID}`);
-        const userData = response.data;
-
-        setUser(userData);
-        setAddresses(userData.addresses || []);
-        setOrders(userData.orders || []);
-        setProfileData({
-          name: userData.name,
-          email: userData.email,
-          numberPhone: userData.numberPhone || "",
-        });
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [DEVELOPER_USER_ID]);
-
-  const handleUpdateProfile = async () => {
-    if (!user) return;
-    try {
-      const response = await api.patch(`/clients/${user.id}`, profileData);
-      setUser(response.data);
-      setIsProfileModalOpen(false);
-    } catch (err) {
-      console.error("Erro ao atualizar perfil:", err);
-    }
-  };
-
-  const addAddress = async () => {
-    const payload = {
-      ...newAddress,
-      clientId: DEVELOPER_USER_ID,
-      isDefault: false,
-    };
-
-    try {
-      const response = await api.post("/addresss", payload);
-      setAddresses((prev) => [...prev, response.data]);
-
-      setNewAddress({
-        logradouro: "",
-        numero: "",
-        cidade: "",
-        estado: "",
-        cep: "",
-        bairro: "",
-        complemento: "",
+    if (user) {
+      setProfileData({
+        name: user.name,
+        email: user.email,
+        numberPhone: user.numberPhone || "",
       });
-      setIsAddressModalOpen(false);
-    } catch (err) {
-      console.error("Erro ao adicionar endereço:", err);
     }
-  };
-
-  const deleteAddress = async (id: string) => {
-    try {
-      await api.delete(`/addresss/${id}`);
-      setAddresses((prev) => prev.filter((a) => a.id !== id));
-    } catch (err) {
-      console.error("Erro ao deletar endereço:", err);
-    }
-  };
-
-  const setDefault = async (id: string) => {
-    try {
-      await api.patch(`/addresss/${id}/default`);
-      setAddresses((prev) =>
-        prev.map((a) => ({ ...a, isDefault: a.id === id }))
-      );
-    } catch (err) {
-      console.error("Erro ao definir endereço padrão:", err);
-    }
-  };
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -127,27 +65,49 @@ const Profile = () => {
     );
   }
 
+  if (!user) return null;
+
+  const handleUpdateProfile = async () => {
+    await updateProfile.mutateAsync(profileData);
+    setIsProfileModalOpen(false);
+  };
+
+  const handleAddAddress = async () => {
+    await addAddress.mutateAsync({
+      ...newAddress,
+      clientId,
+      isDefault: false,
+    });
+    setNewAddress({
+      logradouro: "",
+      numero: "",
+      cidade: "",
+      estado: "",
+      cep: "",
+      bairro: "",
+      complemento: "",
+    });
+    setIsAddressModalOpen(false);
+  };
+
   return (
     <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] py-4 gap-2 flex-col md:flex-row">
-      {user && (
-        <ProfileData
-          user={user}
-          addresses={addresses}
-          profileData={profileData}
-          setProfileData={setProfileData}
-          isProfileModalOpen={isProfileModalOpen}
-          setIsProfileModalOpen={setIsProfileModalOpen}
-          handleUpdateProfile={handleUpdateProfile}
-          deleteAddress={deleteAddress}
-          setDefault={setDefault}
-          newAddress={newAddress}
-          setNewAddress={setNewAddress}
-          isAddressModalOpen={isAddressModalOpen}
-          setIsAddressModalOpen={setIsAddressModalOpen}
-          addAddress={addAddress}
-        />
-      )}
-
+      <ProfileData
+        user={user}
+        addresses={addresses || []}
+        profileData={profileData}
+        setProfileData={setProfileData}
+        isProfileModalOpen={isProfileModalOpen}
+        setIsProfileModalOpen={setIsProfileModalOpen}
+        handleUpdateProfile={handleUpdateProfile}
+        deleteAddress={(id) => deleteAddress.mutate(id)}
+        setDefault={(id) => setDefault.mutate(id)}
+        newAddress={newAddress}
+        setNewAddress={setNewAddress}
+        isAddressModalOpen={isAddressModalOpen}
+        setIsAddressModalOpen={setIsAddressModalOpen}
+        addAddress={handleAddAddress}
+      />
       <Card className="w-full shadow-md border border-border/50">
         <CardHeader>
           <CardTitle className="text-xl font-semibold">
@@ -161,7 +121,7 @@ const Profile = () => {
               Você ainda não possui pedidos.
             </p>
           ) : (
-            orders.map((order) => (
+            orders.map((order: Order) => (
               <div
                 key={order.id}
                 className="border p-3 rounded-md flex justify-between items-center"

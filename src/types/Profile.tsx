@@ -10,13 +10,6 @@ export interface Address {
   isDefault?: boolean;
 }
 
-export interface Order {
-  id: number;
-  createdAt: string;
-  total: number;
-  status: "ABERTO" | "AGUARDANDO_PAGAMENTO" | "PAGO" | "CANCELADO";
-}
-
 export interface User {
   id: string;
   name: string;

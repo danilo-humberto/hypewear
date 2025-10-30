@@ -139,47 +139,55 @@ const ProfileData: React.FC<ProfileDataProps> = ({
 
         <div className="flex flex-col gap-3">
           <h2 className="text-lg font-semibold">Meus Endereços</h2>
-          {addresses.map((address) => (
-            <div
-              key={address.id}
-              className="border p-3 rounded-md flex justify-between items-center"
-            >
-              <div>
-                <p className="font-medium">
-                  {address.logradouro}, {address.numero}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {address.cidade} - {address.estado} | CEP: {address.cep}
-                </p>
-                {address.isDefault && (
-                  <span className="text-xs text-green-600 font-medium">
-                    🌟 Endereço padrão
-                  </span>
-                )}
+          {addresses.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Nenhum endereço cadastrado. Adicione um novo abaixo.
+            </p>
+          ) : (
+            addresses.map((address) => (
+              <div
+                key={address.id}
+                className="border p-3 rounded-md flex justify-between items-center"
+              >
+                <div>
+                  <p className="font-medium">
+                    {address.logradouro}, {address.numero}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {address.cidade} - {address.estado} | CEP: {address.cep}
+                  </p>
+                  {address.isDefault && (
+                    <span className="text-xs text-green-600 font-medium">
+                      🌟 Endereço padrão
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setDefault(address.id)}
+                  >
+                    <Star
+                      size={18}
+                      className={
+                        address.isDefault
+                          ? "fill-yellow-400 text-yellow-400"
+                          : ""
+                      }
+                    />
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => deleteAddress(address.id)}
+                  >
+                    <Trash2 size={18} />
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setDefault(address.id)}
-                >
-                  <Star
-                    size={18}
-                    className={
-                      address.isDefault ? "fill-yellow-400 text-yellow-400" : ""
-                    }
-                  />
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => deleteAddress(address.id)}
-                >
-                  <Trash2 size={18} />
-                </Button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
 
           <Dialog
             open={isAddressModalOpen}
