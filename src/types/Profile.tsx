@@ -15,4 +15,5 @@ export interface User {
   name: string;
   email: string;
   numberPhone: string;
+  createdAt: string;
 }
