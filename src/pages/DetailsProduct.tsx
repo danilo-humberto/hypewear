@@ -55,13 +55,18 @@ const DetailsProduct = () => {
               <Separator />
               <div className="flex items-center justify-between pt-2">
                 <div>
-                  <span className="font-bold text-2xl">
-                    {Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(data?.price!)}
-                  </span>
-                  <span className="text-sm text-muted-foreground">/un</span>
+                  <p className="text-xs text-muted-foreground">
+                    Quantidade Disponíveis: {data?.estoque}
+                  </p>
+                  <div>
+                    <span className="font-bold text-2xl">
+                      {Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(data?.price!)}
+                    </span>
+                    <span className="text-sm text-muted-foreground">/un</span>
+                  </div>
                 </div>
                 <Button onClick={() => addToCart(id!)}>
                   <ShoppingCart />
