@@ -1,19 +1,14 @@
 import { createPayment } from "@/api/payments.endpoint";
-import type { Order, PaymentMethodType } from "../../types/payments";
+import type { Payment, CreatePaymentDto } from "@/types/order";
 import { useMutation } from "@tanstack/react-query";
 
 interface CreatePaymentArgs {
-  orderId: string;
-  method: PaymentMethodType;
-  value: number;
+  dto: CreatePaymentDto;
+  token: string;
 }
 
 export const useCreatePaymentMutation = () => {
-  return useMutation<
-    Order,
-    Error,
-    { dto: CreatePaymentArgs; token: string }
-  >({
+  return useMutation<Payment, Error, CreatePaymentArgs>({
     mutationFn: ({ dto, token }) => createPayment(dto, token),
   });
 };
