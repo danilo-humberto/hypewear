@@ -1,5 +1,5 @@
+import type { CreateOrderDto, Order } from "@/types/Order";
 import api from "./axios";
-import type { Order, CreateOrderDto } from "../types/order";
 
 export const createOrder = async (
   dto: CreateOrderDto,

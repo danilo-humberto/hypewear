@@ -5,14 +5,15 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "../ui/dialog";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-import type { Order, PaymentMethodType } from "../../types/payments";
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import type { PaymentMethodType } from "@/types/payments";
 import { getClientData } from "@/utils/storage";
-import { useCreatePaymentMutation } from "../../hooks/queries/usePayments";
+import { useCreatePaymentMutation } from "@/hooks/queries/usePayments";
 import { toast } from "sonner";
+import type { Order } from "@/types/Order";
 
 interface PaymentDialogProps {
   order: Order;
@@ -42,14 +43,14 @@ export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
     createPayment.mutate(
       { dto: paymentDto, token: authData.access_token },
       {
-        onSuccess: (updatedOrder: Order) => {
+        onSuccess: () => {
           toast.success("Pagamento criado com sucesso!");
           onOpenChange(false);
         },
         onError: (error: Error) => {
           toast.error(error.message || "Falha ao processar pagamento.");
         },
-      },
+      }
     );
   };
 

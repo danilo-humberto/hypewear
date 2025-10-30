@@ -1,5 +1,5 @@
 import { createOrder, getOrders } from "@/api/orders.endpoint";
-import type { Order, CreateOrderDto } from "@/types/order"; // Certifique-se que o caminho está correto
+import type { Order, CreateOrderDto } from "@/types/Order"; // Certifique-se que o caminho está correto
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useCreateOrderMutation = () => {

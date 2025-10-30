@@ -12,7 +12,7 @@ import {
 } from "@/hooks/queries/useAdresss";
 import { useGetOrders } from "@/hooks/queries/useOrders";
 import { useEffect } from "react";
-import { Separator } from "@radix-ui/react-separator";
+import { Separator } from "@/components/ui/separator";
 import type { Order } from "@/types/Order";
 
 const Profile = () => {
@@ -97,7 +97,7 @@ const Profile = () => {
   return (
     <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] py-4 gap-2 flex-col md:flex-row">
       <ProfileData
-        user={user}
+        client={user}
         addresses={addresses || []}
         profileData={profileData}
         setProfileData={setProfileData}
@@ -138,7 +138,12 @@ const Profile = () => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">{order.total}</p>
+                  <p className="font-medium">
+                    {new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(order.total)}
+                  </p>
                   <p
                     className={`text-sm ${
                       order.status === "PAGO"

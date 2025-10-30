@@ -13,10 +13,10 @@ import { CalendarArrowUp, Edit, Mail, Phone, Star, Trash2 } from "lucide-react";
 import React from "react";
 import { format } from "date-fns";
 
-import type { Address, User } from "@/types/Profile";
+import type { Address, Client } from "@/types/Profile";
 
 interface ProfileDataProps {
-  user: User;
+  client: Client;
   addresses: Address[];
   profileData: { name: string; email: string; numberPhone: string };
   setProfileData: React.Dispatch<
@@ -53,7 +53,7 @@ interface ProfileDataProps {
 }
 
 const ProfileData: React.FC<ProfileDataProps> = ({
-  user,
+  client,
   addresses,
   profileData,
   setProfileData,
@@ -71,19 +71,19 @@ const ProfileData: React.FC<ProfileDataProps> = ({
   return (
     <Card className="w-full flex flex-col shadow-md border border-border/50">
       <CardHeader className="flex flex-col items-center text-center">
-        <CardTitle className="text-xl font-semibold">{user.name}</CardTitle>
+        <CardTitle className="text-xl font-semibold">{client.name}</CardTitle>
         <div className="flex flex-col lg:flex-row items-center gap-4">
           <div className="flex items-center gap-4">
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              <Phone size={16} /> {user.numberPhone}
+              <Phone size={16} /> {client.numberPhone}
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-2">
               <CalendarArrowUp size={16} />{" "}
-              {format(user.createdAt, "dd/MM/yyyy")}
+              {format(client.createdAt, "dd/MM/yyyy")}
             </p>
           </div>
           <p className="text-sm text-muted-foreground flex items-center gap-2">
-            <Mail size={16} /> {user.email}
+            <Mail size={16} /> {client.email}
           </p>
         </div>
       </CardHeader>

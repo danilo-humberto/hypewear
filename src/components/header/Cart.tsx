@@ -17,8 +17,8 @@ import { Button } from "../ui/button";
 import { useState, useMemo } from "react";
 import { Dialog } from "../ui/dialog";
 import { PaymentDialog } from "./PaymentDialog";
-import type { Order } from "../../types/payments";
 import { toast } from "sonner";
+import type { Order } from "@/types/Order";
 
 const Cart = () => {
   const { cart, removeQuantityOrProduct, addQuantity } = useCart();
@@ -55,7 +55,7 @@ const Cart = () => {
         onError: (error: Error) => {
           toast.error(error.message || "Falha ao criar pedido.");
         },
-      },
+      }
     );
   };
 
@@ -67,15 +67,12 @@ const Cart = () => {
     <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
       <Sheet>
         <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            className="lg:flex lg:items-center lg:gap-1 lg:cursor-pointer lg:p-2 lg:rounded-md lg:transition-all lg:duration-300 lg:hover:bg-accent relative"
-          >
-            <ShoppingBag />
+          <button className="lg:flex lg:items-center lg:gap-1 lg:cursor-pointer lg:p-2 lg:rounded-md lg:transition-all lg:duration-300 lg:hover:bg-accent relative">
+            <ShoppingBag size={25} />
             <span className="absolute -top-2 lg:-top-0 -right-1 lg:-right-0 bg-foreground text-background w-4 h-4 text-[12px] rounded-full flex items-center justify-center">
               {cart.length}
             </span>
-          </Button>
+          </button>
         </SheetTrigger>
         <SheetContent
           side="right"
@@ -173,10 +170,7 @@ const Cart = () => {
       </Sheet>
 
       {createdOrder && (
-        <PaymentDialog
-          order={createdOrder}
-          onOpenChange={setIsPaymentOpen}
-        />
+        <PaymentDialog order={createdOrder} onOpenChange={setIsPaymentOpen} />
       )}
     </Dialog>
   );
