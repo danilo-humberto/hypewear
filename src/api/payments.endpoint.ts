@@ -1,5 +1,6 @@
+import type { Order } from "@/types/Order";
 import api from "./axios";
-import type { Order, PaymentMethodType } from "../types/payments";
+import type { PaymentMethodType } from "@/types/payments";
 
 interface CreatePaymentDto {
   orderId: string;
@@ -9,7 +10,7 @@ interface CreatePaymentDto {
 
 export const createPayment = async (
   dto: CreatePaymentDto,
-  token: string,
+  token: string
 ): Promise<Order> => {
   const { data } = await api.post("/payments", dto, {
     headers: {

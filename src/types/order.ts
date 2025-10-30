@@ -1,3 +1,4 @@
+import type { Product } from "./Product";
 import type { Client } from "./Profile";
 
 interface CreateOrderItemDto {
@@ -17,6 +18,7 @@ export interface OrderItem {
   quantity: number;
   price: number;
   subtotal: number;
+  product: Product;
 }
 
 export type OrderStatus =
