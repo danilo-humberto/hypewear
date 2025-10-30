@@ -53,7 +53,7 @@ const SelectType = ({ selected, handleSelectChange }: SelectTypeProps) => {
             </SelectItem>
           )}
         </SelectGroup>
-        {categories.length === 0 && (
+        {categories?.length === 0 && (
           <>
             <SelectSeparator />
             <SelectGroup>
