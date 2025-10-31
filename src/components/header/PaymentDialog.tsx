@@ -5,15 +5,12 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import type { PaymentMethodType } from "@/types/payments";
-import { getClientData } from "@/utils/storage";
-import { useCreatePaymentMutation } from "@/hooks/queries/usePayments";
-import { toast } from "sonner";
-import type { Order } from "@/types/Order";
+} from "../ui/dialog";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import type { Order, PaymentMethodType } from "@/types/order";
+import { usePayment } from "../../hooks/usePayments";
 
 interface PaymentDialogProps {
   order: Order;
@@ -21,38 +18,13 @@ interface PaymentDialogProps {
 }
 
 export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
-  const createPayment = useCreatePaymentMutation();
+  const { handleConfirmPayment, handleCancel, isProcessing } = usePayment(
+    order,
+    onOpenChange
+  );
 
   const [selectedMethod, setSelectedMethod] =
     useState<PaymentMethodType | null>(null);
-
-  const handleConfirmPayment = async () => {
-    const authData = getClientData("client");
-
-    if (!selectedMethod || !authData || !authData.access_token) {
-      toast.error("Selecione um método e esteja logado.");
-      return;
-    }
-
-    const paymentDto = {
-      orderId: order.id,
-      method: selectedMethod,
-      value: order.total,
-    };
-
-    createPayment.mutate(
-      { dto: paymentDto, token: authData.access_token },
-      {
-        onSuccess: () => {
-          toast.success("Pagamento criado com sucesso!");
-          onOpenChange(false);
-        },
-        onError: (error: Error) => {
-          toast.error(error.message || "Falha ao processar pagamento.");
-        },
-      }
-    );
-  };
 
   return (
     <DialogContent>
@@ -70,7 +42,7 @@ export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
       <div className="py-4">
         <h4 className="mb-4 font-medium">Selecione o método:</h4>
         <RadioGroup
-          onValueChange={(value) =>
+          onValueChange={(value: any) =>
             setSelectedMethod(value as PaymentMethodType)
           }
         >
@@ -92,16 +64,16 @@ export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
       <DialogFooter>
         <Button
           variant="outline"
-          onClick={() => onOpenChange(false)}
-          disabled={createPayment.isPending}
+          onClick={handleCancel}
+          disabled={isProcessing}
         >
           Cancelar
         </Button>
         <Button
-          onClick={handleConfirmPayment}
-          disabled={!selectedMethod || createPayment.isPending}
+          onClick={() => handleConfirmPayment(selectedMethod)}
+          disabled={!selectedMethod || isProcessing}
         >
-          {createPayment.isPending ? "Processando..." : "Confirmar Pagamento"}
+          {isProcessing ? "Processando..." : "Confirmar Pagamento"}
         </Button>
       </DialogFooter>
     </DialogContent>

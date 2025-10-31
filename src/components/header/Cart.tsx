@@ -1,6 +1,5 @@
 import { useCart } from "@/hooks/useCart";
-import { getClientData } from "@/utils/storage";
-import { useCreateOrderMutation } from "../../hooks/queries/useOrders";
+import { useCheckout } from "@/hooks/useCheckout";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import {
   Sheet,
@@ -14,57 +13,21 @@ import {
 } from "../ui/sheet";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
-import { useState, useMemo } from "react";
 import { Dialog } from "../ui/dialog";
 import { PaymentDialog } from "./PaymentDialog";
-import { toast } from "sonner";
-import type { Order } from "@/types/Order";
 
 const Cart = () => {
-  const { cart, removeQuantityOrProduct, addQuantity } = useCart();
-  const createOrder = useCreateOrderMutation();
-
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
-
-  const handleCheckout = async () => {
-    if (cart.length === 0) return;
-
-    const authData = getClientData("client");
-
-    if (!authData || !authData.client || !authData.access_token) {
-      toast.error("Você precisa estar logado para finalizar a compra.");
-      return;
-    }
-
-    const orderDto = {
-      clientId: authData.client.id,
-      items: cart.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-      })),
-    };
-
-    createOrder.mutate(
-      { dto: orderDto, token: authData.access_token },
-      {
-        onSuccess: (newOrder: Order) => {
-          setCreatedOrder(newOrder);
-          setIsPaymentOpen(true);
-        },
-        onError: (error: Error) => {
-          toast.error(error.message || "Falha ao criar pedido.");
-        },
-      }
-    );
-  };
-
-  const total = useMemo(() => {
-    return cart.reduce((acc, item) => acc + item.totalPrice, 0);
-  }, [cart]);
+  const { cart, removeQuantityOrProduct, addQuantity, total } = useCart();
+  const {
+    isPaymentOpen,
+    createdOrder,
+    handleCheckout,
+    handleModalOpenChange,
+    isCheckoutLoading,
+  } = useCheckout();
 
   return (
-    <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
+    <Dialog open={isPaymentOpen} onOpenChange={handleModalOpenChange}>
       <Sheet>
         <SheetTrigger asChild>
           <button className="lg:flex lg:items-center lg:gap-1 lg:cursor-pointer lg:p-2 lg:rounded-md lg:transition-all lg:duration-300 lg:hover:bg-accent relative">
@@ -160,9 +123,9 @@ const Cart = () => {
               <Button
                 className="w-full mt-5 h-[5vh]"
                 onClick={handleCheckout}
-                disabled={createOrder.isPending || cart.length === 0}
+                disabled={isCheckoutLoading || cart.length === 0}
               >
-                {createOrder.isPending ? "Criando pedido..." : "Checkout"}
+                {isCheckoutLoading ? "Criando pedido..." : "Checkout"}
               </Button>
             </div>
           </SheetFooter>
@@ -170,7 +133,10 @@ const Cart = () => {
       </Sheet>
 
       {createdOrder && (
-        <PaymentDialog order={createdOrder} onOpenChange={setIsPaymentOpen} />
+        <PaymentDialog
+          order={createdOrder}
+          onOpenChange={handleModalOpenChange}
+        />
       )}
     </Dialog>
   );

@@ -1,4 +1,3 @@
-import type { Product } from "./Product";
 import type { Client } from "./Profile";
 
 interface CreateOrderItemDto {
@@ -18,7 +17,13 @@ export interface OrderItem {
   quantity: number;
   price: number;
   subtotal: number;
-  product: Product;
+  product: CartItem;
+}
+
+export interface CreatePaymentDto {
+  orderId: string;
+  method: PaymentMethodType;
+  value: number;
 }
 
 export type OrderStatus =
@@ -26,6 +31,8 @@ export type OrderStatus =
   | "AGUARDANDO_PAGAMENTO"
   | "PAGO"
   | "CANCELADO";
+
+export type PaymentMethodType = "CARTAO" | "BOLETO" | "PIX";
 
 export interface Order {
   id: string;
@@ -38,4 +45,25 @@ export interface Order {
   totalQuantity: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  category: string;
+  imagem: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+export type PaymentStatusType = "PENDENTE" | "PAGO" | "CANCELADO";
+
+export interface Payment {
+  id: string;
+  orderId: string;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  date: string;
 }

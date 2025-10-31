@@ -1,36 +1,45 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useQueryClient } from "@tanstack/react-query";
 import { getProduct } from "@/api/products.endpoint";
-import React, { useState, createContext, useContext } from "react";
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
 import { toast } from "sonner";
+import { getCartItems, setCartItems } from "@/utils/storage";
+import type { CartItem } from "@/types/order";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  category: string;
-  imagem: string;
-  quantity: number;
-  totalPrice: number;
-}
+type ApiProduct = Omit<CartItem, "quantity" | "totalPrice">;
 
 interface CartContextType {
-  cart: Product[];
+  cart: CartItem[];
   addToCart: (id: string) => Promise<void>;
   removeQuantityOrProduct: (id: string) => void;
   addQuantity: (id: string) => void;
+  clearCart: () => void;
+  total: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => getCartItems());
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setCartItems(cart);
+  }, [cart]);
+
+  const total = useMemo(() => {
+    return cart.reduce((acc, item) => acc + item.totalPrice, 0);
+  }, [cart]);
 
   const addToCart = async (id: string) => {
     try {
-      let product = queryClient.getQueryData<Product>(["product", id]);
+      let product = queryClient.getQueryData<ApiProduct>(["product", id]);
       if (!product) product = await getProduct(id);
 
       if (
@@ -46,29 +55,25 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setCart((prevCart) => {
         const existingProduct = prevCart.find((item) => item.id === id);
         if (existingProduct) {
-          const updatedCart = prevCart.map((item) => {
-            if (item.id === id) {
-              const newQuantity = item.quantity + 1;
-              const totalPrice = item.price * newQuantity;
-              return {
-                ...item,
-                quantity: newQuantity,
-                totalPrice,
-              };
-            } else {
-              return item;
-            }
-          });
-          return updatedCart;
+          return prevCart.map((item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  quantity: item.quantity + 1,
+                  totalPrice: item.price * (item.quantity + 1),
+                }
+              : item
+          );
         } else {
-          const updatedCart = [
-            ...prevCart,
-            { ...product, quantity: 1, totalPrice: product.price },
-          ];
-          return updatedCart;
+          const newCartItem: CartItem = {
+            ...(product as ApiProduct),
+            quantity: 1,
+            totalPrice: product.price,
+          };
+          return [...prevCart, newCartItem];
         }
       });
-      toast.success(`${product.name} adicionado ao carrinho.`);
+      toast.success(`Product added to cart`);
     } catch (error) {
       console.error("Falha ao adicionar produto:", error);
       toast.error("Erro ao adicionar produto. Tente novamente.");
@@ -78,49 +83,50 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const removeQuantityOrProduct = (id: string) => {
     setCart((prev) => {
       const existingProduct = prev.find((item) => item.id === id);
-
       if (!existingProduct) return prev;
-
       if (existingProduct.quantity > 1) {
-        return prev.map((item) => {
-          if (item.id === id) {
-            const newQuantity = item.quantity - 1;
-            const totalPrice = item.price * newQuantity;
-            return {
-              ...item,
-              quantity: newQuantity,
-              totalPrice,
-            };
-          }
-
-          return item;
-        });
+        return prev.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                quantity: item.quantity - 1,
+                totalPrice: item.price * (item.quantity - 1),
+              }
+            : item
+        );
       }
-
       return prev.filter((item) => item.id !== id);
     });
   };
 
   const addQuantity = (id: string) => {
     setCart((prev) => {
-      return prev.map((item) => {
-        if (item.id === id) {
-          const newQuantity = item.quantity + 1;
-          const totalPrice = item.price * newQuantity;
-          return {
-            ...item,
-            quantity: newQuantity,
-            totalPrice,
-          };
-        }
-        return item;
-      });
+      return prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+              totalPrice: item.price * (item.quantity + 1),
+            }
+          : item
+      );
     });
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeQuantityOrProduct, addQuantity }}
+      value={{
+        cart,
+        addToCart,
+        removeQuantityOrProduct,
+        addQuantity,
+        clearCart,
+        total,
+      }}
     >
       {children}
     </CartContext.Provider>
