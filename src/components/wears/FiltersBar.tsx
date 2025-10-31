@@ -6,7 +6,6 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
@@ -45,7 +44,17 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
   }, [search]);
 
   const handleCategory = (category: string) => {
-    onChange({ ...value, nameCategory: category });
+    onChange({ ...value, nameCategory: category || undefined });
+  };
+
+  const clearAll = () => {
+    setSearch("");
+    onChange({
+      name: undefined,
+      nameCategory: undefined,
+      precoMin: undefined,
+      precoMax: undefined,
+    });
   };
   return (
     <>
@@ -86,7 +95,7 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
         />
       </div>
 
-      <Select value={value.nameCategory} onValueChange={handleCategory}>
+      <Select value={value.nameCategory ?? ""} onValueChange={handleCategory}>
         <SelectTrigger className="w-full lg:w-[180px] capitalize cursor-pointer">
           <SelectValue placeholder="Categorias" />
         </SelectTrigger>
@@ -115,30 +124,13 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
               </SelectItem>
             )}
           </SelectGroup>
-          {categories?.length !== 0 && (
-            <>
-              <SelectSeparator />
-              <SelectGroup>
-                <SelectItem value="All" className="capitalize">
-                  All
-                </SelectItem>
-              </SelectGroup>
-            </>
-          )}
         </SelectContent>
       </Select>
 
       <Button
         variant="secondary"
         className="w-full lg:w-fit"
-        onClick={() =>
-          onChange({
-            name: undefined,
-            nameCategory: undefined,
-            precoMin: undefined,
-            precoMax: undefined,
-          })
-        }
+        onClick={clearAll}
       >
         Limpar
       </Button>
