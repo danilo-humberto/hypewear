@@ -13,7 +13,7 @@ import {
 import { useGetOrders } from "@/hooks/queries/useOrders";
 import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import type { Order } from "@/types/Order";
+import type { Order } from "@/types/order";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import OrderInformation from "@/components/profile/OrderInformation";
 
@@ -168,7 +168,7 @@ const Profile = () => {
           </CardContent>
         </Card>
         <DialogContent className="w-full lg:min-w-lg">
-          <OrderInformation order={selectedOrder} />
+          <OrderInformation order={selectedOrder} id={clientId} />
         </DialogContent>
       </Dialog>
     </div>

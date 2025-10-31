@@ -1,12 +1,14 @@
-import type { Order } from "@/types/Order";
+import type { Order } from "@/types/order";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { confirmPayment } from "@/api/payments.endpoint";
 
 type OrderInformationProps = {
   order: Order | null;
+  id: string;
 };
 
-const OrderInformation = ({ order }: OrderInformationProps) => {
+const OrderInformation = ({ order, id }: OrderInformationProps) => {
   return (
     <div>
       <h2 className="font-semibold">Itens do Pedido</h2>
@@ -48,7 +50,11 @@ const OrderInformation = ({ order }: OrderInformationProps) => {
       <div className="flex flex-col gap-2">
         {order?.status === "AGUARDANDO_PAGAMENTO" && (
           <>
-            <Button className="w-full" size={"lg"}>
+            <Button
+              className="w-full"
+              size={"lg"}
+              onClick={() => confirmPayment(order.payments[0].id, id)}
+            >
               Confirmar Pagamento
             </Button>
             <Button variant={"destructive"} className="w-full" size={"lg"}>

@@ -39,6 +39,7 @@ export interface Order {
   clientId: string;
   client: Client;
   items: OrderItem[];
+  payments: Payment[];
   status: OrderStatus;
   subtotal: number;
   total: number;
