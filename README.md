@@ -70,3 +70,7 @@ Este projeto é de uso educacional e foi desenvolvido exclusivamente como parte 
 
 - Github --> [@danilo-humberto](https://www.github.com/danilo-humberto)
 - LinkedIn --> [@danilo-humberto](https://www.linkedin.com/in/danilo-humberto-28a771215/)
+
+- Colaboradores
+* [Leandro Silva](https://github.com/leandroxzq)
+* [Juliana Felix](https://github.com/feliixjuliana)
