@@ -1,3 +1,5 @@
+export type ClientRole = "USER" | "ADMIN";
+
 export interface Address {
   id: string;
   logradouro: string;
@@ -14,6 +16,8 @@ export interface Client {
   id: string;
   name: string;
   email: string;
-  numberPhone: string;
+  role: ClientRole;
+  numberPhone?: string;
   createdAt: string;
+  addresses: Address[];
 }

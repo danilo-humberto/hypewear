@@ -1,30 +1,6 @@
-import type { Client } from "./Profile";
-
-interface CreateOrderItemDto {
-  productId: string;
-  quantity: number;
-}
-
-export interface CreateOrderDto {
-  clientId: string;
-  items: CreateOrderItemDto[];
-}
-
-export interface OrderItem {
-  id: string;
-  orderId: string;
-  productId: string;
-  quantity: number;
-  price: number;
-  subtotal: number;
-  product: CartItem;
-}
-
-export interface CreatePaymentDto {
-  orderId: string;
-  method: PaymentMethodType;
-  value: number;
-}
+import type { Payment } from "./payments";
+import type { Product } from "./product";
+import type { Client } from "./Profile"; // vamos criar em seguida
 
 export type OrderStatus =
   | "ABERTO"
@@ -32,39 +8,27 @@ export type OrderStatus =
   | "PAGO"
   | "CANCELADO";
 
-export type PaymentMethodType = "CARTAO" | "BOLETO" | "PIX";
+export interface OrderItem {
+  id: string;
+  orderId: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal?: number;
+  product: Product;
+}
 
 export interface Order {
   id: string;
   clientId: string;
   client: Client;
   items: OrderItem[];
-  payments: Payment[];
+  payments?: Payment | null;
   status: OrderStatus;
-  subtotal: number;
   total: number;
-  totalQuantity: number;
+  subtotal?: number;
+  totalQuantity?: number;
+
   createdAt: string;
   updatedAt: string;
-}
-
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  category: string;
-  imagem: string;
-  quantity: number;
-  totalPrice: number;
-}
-
-export type PaymentStatusType = "PENDENTE" | "PAGO" | "CANCELADO";
-
-export interface Payment {
-  id: string;
-  orderId: string;
-  method: PaymentMethodType;
-  status: PaymentStatusType;
-  date: string;
 }
