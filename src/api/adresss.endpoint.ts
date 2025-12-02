@@ -2,16 +2,16 @@ import api from "./axios";
 
 export const getAddresses = async (clientId: string) => {
   try {
-    const { data } = await api.get(`/addresss/client/${clientId}`);
+    const { data } = await api.get(`/address/client/${clientId}`);
     return data;
   } catch (error: any) {
-    if (err.response?.status === 404) return [];
+    if (error.response?.status === 404) return [];
     throw error;
   }
 };
 
 export const addAddressRequest = async (payload: unknown) => {
-  const { data } = await api.post("/addresss", payload);
+  const { data } = await api.post("/address", payload);
   return data;
 };
 
@@ -21,6 +21,6 @@ export const deleteAddressRequest = async (id: string) => {
 };
 
 export const setDefaultAddressRequest = async (id: string) => {
-  const { data } = await api.patch(`/addresss/${id}/default`);
+  const { data } = await api.patch(`/address/${id}/default`);
   return data;
 };

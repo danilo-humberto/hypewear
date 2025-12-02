@@ -9,7 +9,7 @@ import {
   useAddAddress,
   useDeleteAddress,
   useSetDefaultAddress,
-} from "@/hooks/queries/useAdresss";
+} from "@/hooks/queries/useAdress";
 import { useGetOrders } from "@/hooks/queries/useOrders";
 import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
