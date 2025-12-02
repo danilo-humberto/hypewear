@@ -1,5 +1,5 @@
 import { getClientData } from "@/utils/storage";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 type StoredClient = {
   access_token: string;
@@ -23,19 +23,21 @@ function readClientFromStorage(): StoredClient {
   }
 }
 
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-  };
-}
-
 export function useCurrentClient() {
-  const stored = useSyncExternalStore(
-    subscribe,
-    readClientFromStorage,
-    readClientFromStorage
+  const [stored, setStored] = useState<StoredClient>(() =>
+    readClientFromStorage()
   );
+
+  useEffect(() => {
+    const handleStorage = () => {
+      setStored(readClientFromStorage());
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+    };
+  });
 
   const isAuthenticated = !!stored?.access_token;
   const role = stored?.client?.role || "USER";
