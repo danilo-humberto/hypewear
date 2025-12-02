@@ -1,13 +1,14 @@
 import type { Order, CartItem } from "@/types/order";
 
-const prefixKey = "@auth/"; // A sua chave prefixKey
+const prefixKey = "@auth/"; 
 
-type Client = {
-  access_token: string;
+type ClientData = {
+  token: string;
   client: {
     id: string;
     name: string;
     email: string;
+    role: "ADMIN" | "USER";
   };
 };
 
@@ -15,8 +16,11 @@ export const setClientData = (key: string, value: any) => {
   localStorage.setItem(`${prefixKey}${key}`, JSON.stringify(value));
 };
 
-export const getClientData = (key: string): Client =>
-  JSON.parse(localStorage.getItem(`${prefixKey}${key}`) || "{}");
+export const getClientData = (key: string): ClientData | null => {
+  const data = localStorage.getItem(`${prefixKey}${key}`);
+  if (!data || data === "{}") return null;
+  return JSON.parse(data) as ClientData;
+};
 
 export const removeClientData = (key: string) =>
   localStorage.removeItem(`${prefixKey}${key}`);

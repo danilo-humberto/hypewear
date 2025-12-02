@@ -1,16 +1,14 @@
 import Forms from "@/components/auth/Forms";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/hooks/queries/useAuth";
+import { useAuthQueries } from "@/hooks/queries/useAuth";
 import { useTheme } from "@/hooks/theme-provider";
 import type { RegisterDto } from "@/types/auth";
-import { setClientData } from "@/utils/storage";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const Register = () => {
   const { theme } = useTheme();
-  const { registerMutation } = useAuth();
-  const navigate = useNavigate();
+  const { registerMutation } = useAuthQueries(); 
 
   const handleSubmit = (e: React.FormEvent, credentials: RegisterDto) => {
     e.preventDefault();
@@ -19,13 +17,7 @@ const Register = () => {
       { ...credentials },
       {
         onSuccess: (data) => {
-          const client = {
-            access_token: data.access_token,
-            client: { ...data.client },
-          };
-          setClientData("client", client);
           toast.success("Cadastro realizado com sucesso!");
-          navigate("/");
         },
         onError: () => {
           toast.error(

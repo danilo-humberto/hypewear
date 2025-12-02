@@ -6,10 +6,11 @@ import NotFound from "./pages/NotFound";
 import DetailsProduct from "./pages/DetailsProduct";
 import Layout from "./pages/Layout";
 import Profile from "./pages/Profile";
+import { AuthProvider } from "./context/AuthContext"; 
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route element={<Layout />}>
@@ -20,7 +21,7 @@ function App() {
         <Route path="/auth/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 

@@ -1,16 +1,14 @@
 import Forms from "@/components/auth/Forms";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/hooks/queries/useAuth";
+import { useAuthQueries } from "@/hooks/queries/useAuth";
 import { useTheme } from "@/hooks/theme-provider";
-import { setClientData } from "@/utils/storage";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const Login = () => {
   const { theme } = useTheme();
-  const { loginMutation } = useAuth();
-  const navigate = useNavigate();
+  const { loginMutation } = useAuthQueries();
 
   const handleSubmit = (
     e: React.FormEvent,
@@ -22,14 +20,8 @@ const Login = () => {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: (data) => {
-          const client = {
-            access_token: data.access_token,
-            client: { ...data.client },
-          };
-          setClientData("client", client);
+        onSuccess: () => {
           toast.success("Login realizado com sucesso!");
-          navigate("/");
         },
         onError: (error) => {
           if (axios.isAxiosError(error)) {
@@ -73,7 +65,7 @@ const Login = () => {
           <Separator className="my-3 max-w-sm" />
           <div className="flex flex-col items-center justify-center">
             <p className="text-sm text-muted-foreground md:text-xs">
-              Ainda não possui uma conta?
+              Ainda não possui uma conta?
             </p>
             <Link
               to={"/auth/register"}
