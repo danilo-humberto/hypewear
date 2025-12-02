@@ -17,7 +17,8 @@ import { Dialog } from "../ui/dialog";
 import { PaymentDialog } from "./PaymentDialog";
 
 const Cart = () => {
-  const { cart, removeQuantityOrProduct, addQuantity, total } = useCart();
+  const { cart, removeQuantityOrProduct, addQuantity, updateQuantity, total } =
+    useCart();
   const {
     isPaymentOpen,
     createdOrder,
@@ -87,12 +88,39 @@ const Cart = () => {
                           >
                             <Minus />
                           </Button>
-                          <Button
-                            variant={"ghost"}
-                            className="border-x border-x-muted rounded-none hover:bg-transparent dark:hover:bg-transparent"
-                          >
-                            {item.quantity}
-                          </Button>
+                          <input
+                            type="number"
+                            // AQUI: Usamos defaultValue para que o DOM controle a digitação
+                            defaultValue={item.quantity}
+                            onFocus={(e) => e.target.select()}
+                            onBlur={(e) => {
+                              // O onBlur é quem salva o valor final no estado global
+                              const rawValue = e.target.value.trim();
+                              const newQuantity =
+                                rawValue === "" ? 0 : parseInt(rawValue, 10);
+
+                              if (!isNaN(newQuantity)) {
+                                updateQuantity(item.id, newQuantity);
+                              } else {
+                                // Se for um valor inválido, reverte o input visualmente
+                                e.target.value = item.quantity.toString();
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.currentTarget.blur();
+                              }
+                            }}
+                            // O onChange é removido para evitar a atualização instantânea
+                            className="
+                              w-10 h-10 
+                              text-center 
+                              border-x border-x-muted 
+                              bg-transparent 
+                              focus:outline-none 
+                              appearance-none
+                            "
+                          />
                           <Button
                             variant={"ghost"}
                             onClick={() => addQuantity(item.id)}
