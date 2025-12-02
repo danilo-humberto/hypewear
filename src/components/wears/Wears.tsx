@@ -1,26 +1,16 @@
 import { useProducts } from "@/hooks/queries/useProducts";
 import Cards from "./ProductCards";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import FiltersBar from "./FiltersBar";
 import type { ProductFilters } from "@/types/productFilters";
 
 const Wears = () => {
   const [filters, setFilters] = useState<ProductFilters>({});
   const { data: products, isLoading, isError } = useProducts(filters);
-  const wearsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isLoading && filters.nameCategory !== "") {
-      wearsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [isLoading, filters.nameCategory]);
 
   return (
-    <div
-      className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-24vh] relative z-40"
-      ref={wearsRef}
-    >
+    <div className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-24vh] relative z-40">
       <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative">
         <div className="flex flex-col lg:flex-row items-center mt-4 mb-6 lg:max-w-[90%] mx-auto gap-4">
           <FiltersBar value={filters} onChange={setFilters} />
