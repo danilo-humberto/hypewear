@@ -1,4 +1,5 @@
-import type { Order, CartItem } from "@/types/order";
+import type { CartItem } from "@/types/cart";
+import type { Order } from "@/types/order";
 
 const prefixKey = "@auth/"; // A sua chave prefixKey
 
@@ -8,6 +9,7 @@ type Client = {
     id: string;
     name: string;
     email: string;
+    role: string;
   };
 };
 
