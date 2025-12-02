@@ -19,7 +19,7 @@ const FashionShowCase = () => {
               className="object-cover w-full h-full rounded-md"
             />
           </div>
-          <div className="p-4 bg-accent rounded-md flex flex-col justify-between gap-2 lg:flex-1/2 lg:p-6 h-auto">
+          <div className="p-4 bg-accent rounded-md flex flex-col justify-between gap-2 lg:flex-1/2 lg:p-6 h-auto ">
             <div className="flex flex-col gap-4 py-8">
               <h2 className="font-bold text-2xl">Stay Fresh with HypeWear</h2>
               <p className="text-muted-foreground leading-relaxed text-sm md:text-base">

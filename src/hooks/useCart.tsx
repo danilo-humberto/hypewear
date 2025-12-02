@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { useQueryClient } from "@tanstack/react-query";
 import { getProduct } from "@/api/products.endpoint";
 import React, {
@@ -19,6 +18,7 @@ interface CartContextType {
   addToCart: (id: string) => Promise<void>;
   removeQuantityOrProduct: (id: string) => void;
   addQuantity: (id: string) => void;
+  updateQuantity: (productId: string, newQuantity: number) => void;
   clearCart: () => void;
   total: number;
 }
@@ -113,6 +113,33 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const updateQuantity = (productId: string, newQuantity: number) => {
+  // 1. Garante que a quantidade seja no mínimo 1 (ou 0 se for para remover)
+  const quantity = Math.max(0, newQuantity);
+
+  setCart((prevCart) => {
+    const existingProduct = prevCart.find((item) => item.id === productId);
+
+    if (!existingProduct) {
+      return prevCart;
+    }
+
+    if (quantity === 0) {
+      return prevCart.filter((item) => item.id !== productId);
+    }
+
+    return prevCart.map((item) =>
+      item.id === productId
+        ? {
+            ...item,
+            quantity: quantity,
+            totalPrice: item.price * quantity,
+          }
+        : item
+    );
+  });
+};
+
   const clearCart = () => {
     setCart([]);
   };
@@ -124,6 +151,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         addToCart,
         removeQuantityOrProduct,
         addQuantity,
+        updateQuantity,
         clearCart,
         total,
       }}
