@@ -17,8 +17,7 @@ import { Dialog } from "../ui/dialog";
 import { PaymentDialog } from "./PaymentDialog";
 
 const Cart = () => {
-  const { cart, removeQuantityOrProduct, addQuantity, updateQuantity, total } =
-    useCart();
+  const { cart, removeQuantityOrProduct, addQuantity, total } = useCart();
   const {
     isPaymentOpen,
     createdOrder,
@@ -62,15 +61,15 @@ const Cart = () => {
                 <Card key={item.id} className="w-full h-[160px] flex-1">
                   <CardContent className="flex gap-2 px-2 w-full">
                     <img
-                      src={item.imagem}
-                      alt={item.name}
+                      src={item.product.imagem} 
+                      alt={item.product.name}
                       className="w-24 h-[6.5rem] object-contain rounded-md shrink-0"
                     />
                     <div className="flex flex-col gap-1 justify-between flex-1 min-w-0">
                       <div className="flex flex-col gap-2 min-w-0">
-                        <p className="text-sm truncate">{item.name}</p>
+                        <p className="text-sm truncate">{item.product.name}</p>
                         <p className="truncate text-sm text-muted-foreground">
-                          {item.description}
+                          {item.product.description}
                         </p>
                       </div>
                       <div className="w-full flex justify-between items-center">
@@ -78,52 +77,25 @@ const Cart = () => {
                           {new Intl.NumberFormat("en-US", {
                             style: "currency",
                             currency: "USD",
-                          }).format(item.totalPrice)}
+                          }).format(item.product.price * item.quantity)}
                         </span>
                         <div className="flex border border-muted rounded-sm items-center mr-2">
                           <Button
                             variant={"ghost"}
-                            onClick={() => removeQuantityOrProduct(item.id)}
+                            onClick={() => removeQuantityOrProduct(item.productId)}
                             className="rounded-none"
                           >
                             <Minus />
                           </Button>
                           <input
                             type="number"
-                            // AQUI: Usamos defaultValue para que o DOM controle a digitação
-                            defaultValue={item.quantity}
-                            onFocus={(e) => e.target.select()}
-                            onBlur={(e) => {
-                              // O onBlur é quem salva o valor final no estado global
-                              const rawValue = e.target.value.trim();
-                              const newQuantity =
-                                rawValue === "" ? 0 : parseInt(rawValue, 10);
-
-                              if (!isNaN(newQuantity)) {
-                                updateQuantity(item.id, newQuantity);
-                              } else {
-                                // Se for um valor inválido, reverte o input visualmente
-                                e.target.value = item.quantity.toString();
-                              }
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.currentTarget.blur();
-                              }
-                            }}
-                            // O onChange é removido para evitar a atualização instantânea
-                            className="
-                              w-10 h-10 
-                              text-center 
-                              border-x border-x-muted 
-                              bg-transparent 
-                              focus:outline-none 
-                              appearance-none
-                            "
+                            value={item.quantity}
+                            readOnly
+                            className="w-10 h-10 text-center border-x border-x-muted bg-transparent focus:outline-none appearance-none"
                           />
                           <Button
                             variant={"ghost"}
-                            onClick={() => addQuantity(item.id)}
+                            onClick={() => addQuantity(item.productId)}
                             className="rounded-none"
                           >
                             <Plus />
@@ -153,7 +125,7 @@ const Cart = () => {
                 onClick={handleCheckout}
                 disabled={isCheckoutLoading || cart.length === 0}
               >
-                {isCheckoutLoading ? "Criando pedido..." : "Checkout"}
+                {isCheckoutLoading ? "Processando..." : "Finalizar Compra"}
               </Button>
             </div>
           </SheetFooter>

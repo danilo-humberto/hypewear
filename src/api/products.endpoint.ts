@@ -15,3 +15,5 @@ export const getProduct = async (id: string) => {
   const { data } = await api.get(`/product/${id}`);
   return data;
 };
+
+

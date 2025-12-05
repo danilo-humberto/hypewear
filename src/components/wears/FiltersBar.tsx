@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { X, Search } from "lucide-react";
 
 type FiltersBarProps = {
   value: {
@@ -27,7 +28,7 @@ type Category = {
 };
 
 const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
-  const { data: categories, isLoading, isError } = useCategories();
+  const { data: categories = [], isLoading, isError } = useCategories();
 
   const [search, setSearch] = useState(value.name ?? "");
 
@@ -56,22 +57,30 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
       precoMax: undefined,
     });
   };
-  return (
-    <>
-      <input
-        type="text"
-        placeholder="Pesquisar..."
-        className="bg-input/30 border-input border rounded-sm outline-none text-foreground px-3 py-2 w-full lg:w-md placeholder:text-muted-foreground text-sm"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
 
-      <div className="flex items-center gap-2 lg:gap-4">
+  const selectedCategoryValue = categories.find(
+    (c: Category) => c.name.toLowerCase() === value.nameCategory?.toLowerCase()
+  )?.name;
+
+  return (
+    <div className="flex flex-col lg:flex-row gap-3 w-full">
+      <div className="relative w-full lg:w-md">
+        <input
+          type="text"
+          placeholder="Pesquisar..."
+          className="bg-input/30 border-input border rounded-md outline-none text-foreground pl-3 pr-8 py-2 w-full placeholder:text-muted-foreground text-sm transition-all focus:border-primary"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground opacity-50" />
+      </div>
+
+      <div className="flex items-center gap-2 w-full lg:w-auto">
         <input
           type="number"
           inputMode="decimal"
-          placeholder="Preço mín."
-          className="bg-input/30 border-input border rounded-sm outline-none text-foreground px-3 py-2 w-full placeholder:text-muted-foreground text-sm"
+          placeholder="R$ Mín"
+          className="bg-input/30 border-input border rounded-md outline-none text-foreground px-3 py-2 w-full lg:w-24 placeholder:text-muted-foreground text-sm focus:border-primary"
           value={value.precoMin ?? ""}
           onChange={(e) => {
             onChange({
@@ -80,11 +89,12 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
             });
           }}
         />
+        <span className="text-muted-foreground">-</span>
         <input
           type="number"
           inputMode="decimal"
-          placeholder="Preço máx."
-          className="bg-input/30 border-input border rounded-sm outline-none text-foreground px-3 py-2 w-full placeholder:text-muted-foreground text-sm"
+          placeholder="R$ Máx"
+          className="bg-input/30 border-input border rounded-md outline-none text-foreground px-3 py-2 w-full lg:w-24 placeholder:text-muted-foreground text-sm focus:border-primary"
           value={value.precoMax ?? ""}
           onChange={(e) => {
             onChange({
@@ -95,13 +105,16 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
         />
       </div>
 
-      <Select value={value.nameCategory ?? ""} onValueChange={handleCategory}>
+      <Select 
+        value={selectedCategoryValue ?? ""} 
+        onValueChange={handleCategory}
+      >
         <SelectTrigger className="w-full lg:w-[180px] capitalize cursor-pointer">
           <SelectValue placeholder="Categorias" />
         </SelectTrigger>
         <SelectContent side="bottom" position="popper" avoidCollisions={false}>
           <SelectGroup>
-            <SelectLabel>Categories</SelectLabel>
+            <SelectLabel>Categorias</SelectLabel>
             {isLoading && (
               <SelectItem disabled value="loading">
                 Carregando...
@@ -120,7 +133,7 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
               ))
             ) : (
               <SelectItem disabled value="empty">
-                Nenhuma categoria encontrada
+                {!isLoading ? "Nenhuma categoria" : "..."}
               </SelectItem>
             )}
           </SelectGroup>
@@ -128,13 +141,15 @@ const FiltersBar = ({ value, onChange }: FiltersBarProps) => {
       </Select>
 
       <Button
-        variant="secondary"
-        className="w-full lg:w-fit"
+        variant="ghost"
+        size="icon"
+        className="shrink-0 text-muted-foreground hover:text-foreground"
         onClick={clearAll}
+        title="Limpar filtros"
       >
-        Limpar
+        <X size={18} />
       </Button>
-    </>
+    </div>
   );
 };
 

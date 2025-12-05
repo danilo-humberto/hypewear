@@ -1,5 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { getProduct } from "@/api/products.endpoint";
 import React, {
   useState,
   createContext,
@@ -8,141 +6,116 @@ import React, {
   useMemo,
 } from "react";
 import { toast } from "sonner";
-import { getCartItems, setCartItems } from "@/utils/storage";
-import type { CartItem } from "@/types/order";
-
-type ApiProduct = Omit<CartItem, "quantity" | "totalPrice">;
+import { getClientData } from "@/utils/storage";
+import type { CartItem } from "@/types/cart";
+import { 
+  addItemToCart, 
+  updateCartItem, 
+  getMyCart, 
+  clearMyCart 
+} from "@/api/cart.endpoint";
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (id: string) => Promise<void>;
-  removeQuantityOrProduct: (id: string) => void;
-  addQuantity: (id: string) => void;
+  addToCart: (productId: string) => Promise<void>;
+  removeQuantityOrProduct: (productId: string) => void;
+  addQuantity: (productId: string) => void;
   updateQuantity: (productId: string, newQuantity: number) => void;
-  clearCart: () => void;
+  clearCartLocal: () => void;
+  clearCartApi: () => Promise<void>;
   total: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>(() => getCartItems());
-  const queryClient = useQueryClient();
+  const [cart, setCart] = useState<CartItem[]>([]);
+  
+  const getToken = () => getClientData("client")?.access_token;
 
   useEffect(() => {
-    setCartItems(cart);
-  }, [cart]);
+    const token = getToken();
+    if (token) {
+      getMyCart(token)
+        .then((serverCart) => {
+          if (serverCart && serverCart.items) {
+            setCart(serverCart.items);
+          }
+        })
+        .catch(err => console.error("Erro ao carregar carrinho", err));
+    }
+  }, []);
 
   const total = useMemo(() => {
-    return cart.reduce((acc, item) => acc + item.totalPrice, 0);
+    return cart.reduce((acc, item) => {
+      const price = item.product?.price || 0;
+      return acc + (price * item.quantity);
+    }, 0);
   }, [cart]);
 
-  const addToCart = async (id: string) => {
+  const addToCart = async (productId: string) => {
+    const token = getToken();
+    if (!token) {
+      toast.error("Faça login para adicionar ao carrinho.");
+      return;
+    }
+
     try {
-      let product = queryClient.getQueryData<ApiProduct>(["product", id]);
-      if (!product) product = await getProduct(id);
-
-      if (
-        !product ||
-        !product.id ||
-        !product.name ||
-        typeof product.price === "undefined"
-      ) {
-        toast.error("Produto não encontrado ou inválido. Tente novamente.");
-        return;
-      }
-
-      setCart((prevCart) => {
-        const existingProduct = prevCart.find((item) => item.id === id);
-        if (existingProduct) {
-          return prevCart.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  quantity: item.quantity + 1,
-                  totalPrice: item.price * (item.quantity + 1),
-                }
-              : item
-          );
-        } else {
-          const newCartItem: CartItem = {
-            ...(product as ApiProduct),
-            quantity: 1,
-            totalPrice: product.price,
-          };
-          return [...prevCart, newCartItem];
+      const updatedItem = await addItemToCart(productId, 1, token);
+      
+      setCart((prev) => {
+        const exists = prev.find(i => i.productId === productId);
+        if (exists) {
+          return prev.map(i => i.productId === productId ? updatedItem : i);
         }
+        return [...prev, updatedItem];
       });
-      toast.success(`Product added to cart`);
+      
+      toast.success("Produto adicionado!");
     } catch (error) {
-      console.error("Falha ao adicionar produto:", error);
-      toast.error("Erro ao adicionar produto. Tente novamente.");
+      console.error(error);
+      toast.error("Erro ao adicionar produto.");
     }
   };
 
-  const removeQuantityOrProduct = (id: string) => {
-    setCart((prev) => {
-      const existingProduct = prev.find((item) => item.id === id);
-      if (!existingProduct) return prev;
-      if (existingProduct.quantity > 1) {
-        return prev.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                quantity: item.quantity - 1,
-                totalPrice: item.price * (item.quantity - 1),
-              }
-            : item
-        );
-      }
-      return prev.filter((item) => item.id !== id);
+  const updateQuantity = async (productId: string, newQuantity: number) => {
+    const token = getToken();
+    const quantity = Math.max(0, newQuantity);
+
+    setCart(prev => {
+        if (quantity === 0) return prev.filter(i => i.productId !== productId);
+        return prev.map(i => i.productId === productId ? { ...i, quantity } : i);
     });
+
+    if (token) {
+        try {
+            await updateCartItem(productId, quantity, token);
+        } catch (err) {
+            toast.error("Erro ao sincronizar carrinho.");
+        }
+    }
   };
 
-  const addQuantity = (id: string) => {
-    setCart((prev) => {
-      return prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-              totalPrice: item.price * (item.quantity + 1),
-            }
-          : item
-      );
-    });
+  const addQuantity = (productId: string) => {
+    const item = cart.find(i => i.productId === productId);
+    if (item) updateQuantity(productId, item.quantity + 1);
   };
 
-  const updateQuantity = (productId: string, newQuantity: number) => {
-  // 1. Garante que a quantidade seja no mínimo 1 (ou 0 se for para remover)
-  const quantity = Math.max(0, newQuantity);
+  const removeQuantityOrProduct = (productId: string) => {
+    const item = cart.find(i => i.productId === productId);
+    if (!item) return;
+    updateQuantity(productId, item.quantity - 1);
+  };
 
-  setCart((prevCart) => {
-    const existingProduct = prevCart.find((item) => item.id === productId);
-
-    if (!existingProduct) {
-      return prevCart;
-    }
-
-    if (quantity === 0) {
-      return prevCart.filter((item) => item.id !== productId);
-    }
-
-    return prevCart.map((item) =>
-      item.id === productId
-        ? {
-            ...item,
-            quantity: quantity,
-            totalPrice: item.price * quantity,
-          }
-        : item
-    );
-  });
-};
-
-  const clearCart = () => {
+  const clearCartApi = async () => {
+    const token = getToken();
+    if (token) await clearMyCart(token);
     setCart([]);
   };
+
+  const clearCartLocal = () => {
+    setCart([]);
+  }
 
   return (
     <CartContext.Provider
@@ -152,7 +125,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         removeQuantityOrProduct,
         addQuantity,
         updateQuantity,
-        clearCart,
+        clearCartLocal,
+        clearCartApi,
         total,
       }}
     >
