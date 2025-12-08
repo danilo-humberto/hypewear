@@ -2,7 +2,7 @@ import api from "./axios";
 
 export const getAddresses = async (clientId: string) => {
   try {
-    const { data } = await api.get(`/address/client/${clientId}`);
+    const { data } = await api.get(`/address/me/${clientId}`);
     return data;
   } catch (error: any) {
     if (error.response?.status === 404) return [];
@@ -16,7 +16,7 @@ export const addAddressRequest = async (payload: unknown) => {
 };
 
 export const deleteAddressRequest = async (id: string) => {
-  await api.delete(`/addresss/${id}`);
+  await api.delete(`/address/${id}`);
   return id;
 };
 

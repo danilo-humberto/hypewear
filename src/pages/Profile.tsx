@@ -1,36 +1,32 @@
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
-import { getClientData } from "@/utils/storage";
 import ProfileData from "@/components/profile/ProfileData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useClient, useUpdateClient } from "@/hooks/queries/useClient";
-import {
-  useGetAddresses,
-  useAddAddress,
-  useDeleteAddress,
-  useSetDefaultAddress,
-} from "@/hooks/queries/useAdress";
-import { useGetOrders } from "@/hooks/queries/useOrders";
-import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { Order } from "@/types/order";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import OrderInformation from "@/components/profile/OrderInformation";
+import { useClientMe, useUpdateClientMe } from "@/hooks/queries/useClient";
+import {
+  useAddAddressMe,
+  useDeleteAddressMe,
+  useSetDefaultAddressMe,
+} from "@/hooks/queries/useAdress";
 
 const Profile = () => {
-  const client = getClientData("client");
-  const clientId = client.client.id;
+  const { data: user, isLoading } = useClientMe();
+  const updateProfile = useUpdateClientMe();
+
+  const addAddress = useAddAddressMe();
+  const deleteAddress = useDeleteAddressMe();
+  const setDefault = useSetDefaultAddressMe();
+
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-
-  const { data: user, isLoading } = useClient(clientId);
-  const { data: addresses = [] } = useGetAddresses(clientId);
-  const { data: orders = [] } = useGetOrders(clientId);
-
-  const updateProfile = useUpdateClient(clientId);
-  const addAddress = useAddAddress(clientId);
-  const deleteAddress = useDeleteAddress(clientId);
-  const setDefault = useSetDefaultAddress(clientId);
-
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
@@ -80,11 +76,13 @@ const Profile = () => {
   };
 
   const handleAddAddress = async () => {
-    await addAddress.mutateAsync({
+    const payload = {
       ...newAddress,
-      clientId,
+      clientId: user.id,
       isDefault: false,
-    });
+    };
+
+    await addAddress.mutateAsync(payload);
     setNewAddress({
       logradouro: "",
       numero: "",
@@ -101,7 +99,7 @@ const Profile = () => {
     <div className="flex justify-center min-h-[90vh] mt-20 mx-auto md:w-[60%] lg:w-[90%] p-2 gap-2 flex-col md:flex-row">
       <ProfileData
         client={user}
-        addresses={addresses || []}
+        addresses={user.addresses}
         profileData={profileData}
         setProfileData={setProfileData}
         isProfileModalOpen={isProfileModalOpen}
@@ -124,13 +122,13 @@ const Profile = () => {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <Separator />
-            {orders.length === 0 ? (
+            {user.orders?.length === 0 ? (
               <p className="text-muted-foreground text-center py-6">
                 Você ainda não possui pedidos.
               </p>
             ) : (
-              orders.map((order: Order) => (
-                <DialogTrigger asChild key={order.id} className="">
+              user.orders.map((order: Order) => (
+                <DialogTrigger asChild key={order.id}>
                   <button
                     onClick={() => setSelectedOrder(order)}
                     className="border p-3 gap-2 rounded-md flex justify-between items-center cursor-pointer"
@@ -168,7 +166,8 @@ const Profile = () => {
           </CardContent>
         </Card>
         <DialogContent className="w-full lg:min-w-lg">
-          <OrderInformation order={selectedOrder} id={clientId} />
+          <DialogTitle>Detalhes do Pedido</DialogTitle>
+          <OrderInformation order={selectedOrder} />
         </DialogContent>
       </Dialog>
     </div>

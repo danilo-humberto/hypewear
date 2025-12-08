@@ -23,3 +23,6 @@ export const useUpdateClient = (id: string) => {
     onError: () => toast.error("Erro ao atualizar dados!"),
   });
 };
+
+export const useClientMe = () => useClient("me");
+export const useUpdateClientMe = () => useUpdateClient("me");

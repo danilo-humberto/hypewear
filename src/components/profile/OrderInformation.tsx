@@ -9,11 +9,13 @@ import { Loader2 } from "lucide-react";
 
 type OrderInformationProps = {
   order: Order | null;
-  onUpdate?: () => void; 
+  onUpdate?: () => void;
 };
 
 const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
   const [loading, setLoading] = useState(false);
+
+  if (!order || !order.items?.length) return null;
 
   const getToken = () => {
     const data = getClientData("client");
@@ -25,7 +27,7 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
   };
 
   const handleConfirmPayment = async () => {
-    if (!order?.payments?.id) {
+    if (!order.payments?.id) {
       return toast.error("Informações de pagamento não encontradas.");
     }
 
@@ -36,17 +38,19 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
       setLoading(true);
       await confirmPayment(order.payments.id, token);
       toast.success("Pagamento confirmado com sucesso!");
-      if (onUpdate) onUpdate();
+      onUpdate?.();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Erro ao confirmar pagamento.");
+      toast.error(
+        error.response?.data?.message || "Erro ao confirmar pagamento."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancelOrder = async () => {
-    if (!order?.payments?.id) {
-       return toast.error("Pagamento não vinculado.");
+    if (!order.payments?.id) {
+      return toast.error("Pagamento não vinculado.");
     }
 
     const token = getToken();
@@ -56,7 +60,7 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
       setLoading(true);
       await cancelPayment(order.payments.id, token);
       toast.info("Pedido cancelado.");
-      if (onUpdate) onUpdate();
+      onUpdate?.();
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Erro ao cancelar pedido.");
     } finally {
@@ -64,12 +68,12 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
     }
   };
 
-  if (!order) return null;
-
   return (
     <div>
-      <h2 className="font-semibold text-lg">Itens do Pedido #{order.id.slice(0, 8)}</h2>
-      
+      <h2 className="font-semibold text-lg">
+        Itens do Pedido #{order.id.slice(0, 8)}
+      </h2>
+
       <ul className="flex flex-col gap-4 my-4">
         {order.items.map((item) => (
           <li key={item.id} className="flex gap-4 items-center">
@@ -81,12 +85,13 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
               />
             </div>
             <div className="flex flex-col flex-1 justify-between h-full">
-              <div className="flex justify-between items-start">
-                <p className="font-medium text-sm line-clamp-2">{item.product.name}</p>
-              </div>
-              
+              <p className="font-medium text-sm line-clamp-2">
+                {item.product.name}
+              </p>
               <div className="flex justify-between items-end mt-1">
-                <p className="text-muted-foreground text-sm">{item.quantity}x</p>
+                <p className="text-muted-foreground text-sm">
+                  {item.quantity}x
+                </p>
                 <p className="font-semibold text-sm">
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -102,7 +107,9 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
       <Separator className="my-4" />
 
       <div className="py-2 flex items-center justify-between mb-4">
-        <span className="text-lg font-medium text-muted-foreground">Total:</span>
+        <span className="text-lg font-medium text-muted-foreground">
+          Total:
+        </span>
         <span className="font-bold text-2xl">
           {new Intl.NumberFormat("pt-BR", {
             style: "currency",
@@ -116,18 +123,18 @@ const OrderInformation = ({ order, onUpdate }: OrderInformationProps) => {
           <>
             <Button
               className="w-full font-bold"
-              size={"lg"}
+              size="lg"
               onClick={handleConfirmPayment}
               disabled={loading}
             >
-              {loading ? <Loader2 className="animate-spin mr-2" /> : null}
+              {loading && <Loader2 className="animate-spin mr-2" />}
               Confirmar Pagamento
             </Button>
-            
-            <Button 
-              variant={"destructive"} 
-              className="w-full" 
-              size={"lg"}
+
+            <Button
+              variant="destructive"
+              className="w-full"
+              size="lg"
               onClick={handleCancelOrder}
               disabled={loading}
             >

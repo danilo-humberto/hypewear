@@ -1,55 +1,39 @@
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getAddresses,
   addAddressRequest,
   deleteAddressRequest,
   setDefaultAddressRequest,
 } from "@/api/adresss.endpoint";
 import { toast } from "sonner";
 
-export const useGetAddresses = (clientId: string) =>
-  useQuery({
-    queryKey: ["adresss", clientId],
-    queryFn: () => getAddresses(clientId),
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
-export const useAddAddress = (clientId: string) => {
+export const useAddAddressMe = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (payload: any) => addAddressRequest(payload),
+    mutationFn: addAddressRequest,
     onSuccess: () => {
-      toast.success("Endereço adicionado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["adresss", clientId] });
+      toast.success("Endereço adicionado!");
+      queryClient.invalidateQueries({ queryKey: ["clients", "me"] });
     },
     onError: () => toast.error("Erro ao adicionar endereço!"),
   });
 };
 
-export const useDeleteAddress = (clientId: string) => {
+export const useDeleteAddressMe = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (addressId: string) => deleteAddressRequest(addressId),
-    onSuccess: () => {
-      toast.success("Endereço removido com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["adresss", clientId] });
-    },
+    mutationFn: deleteAddressRequest,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["clients", "me"] }),
     onError: () => toast.error("Erro ao remover endereço!"),
   });
 };
 
-export const useSetDefaultAddress = (clientId: string) => {
+export const useSetDefaultAddressMe = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (addressId: string) => setDefaultAddressRequest(addressId),
-    onSuccess: () => {
-      toast.success("Endereço padrão alterado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["adresss", clientId] });
-    },
-    onError: () => toast.error("Erro ao alterar endereço padrão!"),
+    mutationFn: setDefaultAddressRequest,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["clients", "me"] }),
+    onError: () => toast.error("Erro ao definir endereço padrão!"),
   });
 };
