@@ -1,6 +1,7 @@
 import { getClientData, removePendingOrder } from "@/utils/storage";
 import { useCreatePaymentMutation } from "./queries/usePayment";
-import type { Order, Payment, PaymentMethodType, CreatePaymentDto } from "@/types/order";
+import type { Order } from "@/types/order";
+import type { Payment, PaymentMethodType, CreatePaymentDto } from "@/types/payments";
 import { toast } from "sonner";
 
 export const usePayment = (
@@ -25,7 +26,6 @@ export const usePayment = (
     const paymentDto: CreatePaymentDto = {
       orderId: order.id,
       method: method,
-      value: order.total,
     };
 
     createPayment.mutate(

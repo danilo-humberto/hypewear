@@ -1,5 +1,6 @@
 import api from "./axios";
-import type { CreatePaymentDto, Order, Payment } from "@/types/order";
+import type { Order } from "@/types/order";
+import type { CreatePaymentDto, Payment } from "@/types/payments";
 
 export const createPayment = async (
   dto: CreatePaymentDto,

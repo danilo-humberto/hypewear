@@ -1,5 +1,5 @@
 import { createPayment } from "@/api/payments.endpoint";
-import type { Payment, CreatePaymentDto } from "@/types/order";
+import type { Payment, CreatePaymentDto } from "@/types/payments";
 import { useMutation } from "@tanstack/react-query";
 
 interface CreatePaymentArgs {

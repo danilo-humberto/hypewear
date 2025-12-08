@@ -9,7 +9,9 @@ import {
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import type { Order, PaymentMethodType } from "@/types/order";
+import type { Order } from "@/types/order";
+import type { PaymentMethodType } from "@/types/payments";
+
 import { usePayment } from "../../hooks/usePayments";
 
 interface PaymentDialogProps {
@@ -32,9 +34,9 @@ export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
         <DialogTitle>Confirmar Pagamento</DialogTitle>
         <DialogDescription>
           Pedido #{order.id.substring(0, 8)}... | Total:{" "}
-          {new Intl.NumberFormat("en-US", {
+          {new Intl.NumberFormat("pt-BR", {
             style: "currency",
-            currency: "USD",
+            currency: "BRL",
           }).format(order.total)}
         </DialogDescription>
       </DialogHeader>
@@ -42,7 +44,7 @@ export const PaymentDialog = ({ order, onOpenChange }: PaymentDialogProps) => {
       <div className="py-4">
         <h4 className="mb-4 font-medium">Selecione o método:</h4>
         <RadioGroup
-          onValueChange={(value: any) =>
+          onValueChange={(value) =>
             setSelectedMethod(value as PaymentMethodType)
           }
         >

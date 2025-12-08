@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="public/logo-dark.png" alt="HypeWear Logo" width="200">
+  <p align="center">
+  <img width="80" height="80" alt="logo-light" src="https://github.com/user-attachments/assets/35b871f1-c5ed-4cf9-8d35-5741997cf787" />
+</a>
+</p>
   <h1 align="center"> HypeWear</h1>
 </p>
 
@@ -16,10 +19,14 @@ O **HypeWear** é uma aplicação web que simula uma loja virtual de moda. Criad
 
 ## 🚀 Funcionalidades
 
-- 🧾 Listagem de produtos
-- 🛒 Carrinho de compras
-- 🏷️ Filtrar por categoria
-- ☀️ Modo claro/escuro
+- Listagem de produtos
+- Carrinho de compras
+- Filtrar por categoria
+- Modo claro/escuro
+- Login/Criar conta
+- Perfil
+- Histórico de Pedidos
+- Aba de endereço
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -70,3 +77,7 @@ Este projeto é de uso educacional e foi desenvolvido exclusivamente como parte 
 
 - Github --> [@danilo-humberto](https://www.github.com/danilo-humberto)
 - LinkedIn --> [@danilo-humberto](https://www.linkedin.com/in/danilo-humberto-28a771215/)
+
+- Colaboradores
+* [Leandro Silva](https://github.com/leandroxzq)
+* [Juliana Felix](https://github.com/feliixjuliana)

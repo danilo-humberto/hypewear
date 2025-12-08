@@ -5,13 +5,13 @@ import {
   removePendingOrder,
   setPendingOrder,
 } from "@/utils/storage";
-import { useCreateOrderMutation } from "@/hooks/queries/useOrders";
+import { useCreateOrderMutation } from "./queries/useOrders";
 import { useCart } from "@/hooks/useCart";
 import type { Order, CreateOrderDto } from "@/types/order";
 import { toast } from "sonner";
 
 export const useCheckout = () => {
-  const { cart, clearCart } = useCart();
+  const { clearCartLocal } = useCart();
   const createOrder = useCreateOrderMutation();
 
   const [isPaymentOpen, setIsPaymentOpen] = useState(() => {
@@ -23,9 +23,8 @@ export const useCheckout = () => {
   });
 
   const handleCheckout = () => {
-    if (cart.length === 0) return;
-
     const authData = getClientData("client");
+    
     if (!authData || !authData.client || !authData.access_token) {
       toast.error("Você precisa estar logado para finalizar a compra.");
       return;
@@ -33,10 +32,6 @@ export const useCheckout = () => {
 
     const orderDto: CreateOrderDto = {
       clientId: authData.client.id,
-      items: cart.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-      })),
     };
 
     createOrder.mutate(
@@ -46,10 +41,12 @@ export const useCheckout = () => {
           setCreatedOrder(newOrder);
           setPendingOrder(newOrder);
           setIsPaymentOpen(true);
-          clearCart();
+          clearCartLocal(); 
+          toast.success("Pedido criado com sucesso!");
         },
         onError: (error: Error) => {
-          toast.error(error.message || "Falha ao criar pedido.");
+            const msg = (error as any).response?.data?.message || "Falha ao criar pedido.";
+            toast.error(msg);
         },
       },
     );

@@ -5,11 +5,8 @@ export interface CartItem {
   cartId: string;
   productId: string;
   quantity: number;
-
-  createdAt: string;
-  updatedAt: string;
-
-  product: Product;
+  product: Product; 
+  totalPrice?: number; 
 }
 
 export interface Cart {
@@ -17,7 +14,4 @@ export interface Cart {
   clientId: string;
   items: CartItem[];
   subtotal: number;
-
-  createdAt: string;
-  updatedAt: string;
 }
