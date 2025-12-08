@@ -1,39 +1,19 @@
-import { useAllProductsOrByCategory } from "@/hooks/queries/useProducts";
+import { useProducts } from "@/hooks/queries/useProducts";
 import Cards from "./ProductCards";
-import SelectType from "./SelectType";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import FiltersBar from "./FiltersBar";
+import type { ProductFilters } from "@/types/productFilters";
 
 const Wears = () => {
-  const [selected, setSelected] = useState("");
-  const {
-    data: products,
-    isLoading,
-    isError,
-  } = useAllProductsOrByCategory(selected);
-  const wearsRef = useRef<HTMLDivElement>(null);
-
-  const handleSelectChange = (value: string) => {
-    setSelected(value === "All" ? "All" : value);
-  };
-
-  useEffect(() => {
-    if (!isLoading && selected !== "") {
-      wearsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [isLoading, selected]);
+  const [filters, setFilters] = useState<ProductFilters>({});
+  const { data: products, isLoading, isError } = useProducts(filters);
 
   return (
-    <div
-      className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-24vh] relative z-40"
-      ref={wearsRef}
-    >
+    <div className="scroll-mt-[100px] w-full px-2 lg:px-10 mb-4 mt-[-24vh] relative z-40">
       <div className="bg-background shadow-xl rounded-sm w-full h-auto p-4 relative">
-        <div className="flex items-center justify-end mb-8 lg:max-w-[90%] mx-auto">
-          <SelectType
-            handleSelectChange={handleSelectChange}
-            selected={selected}
-          />
+        <div className="flex flex-col lg:flex-row items-center mt-4 mb-6 lg:max-w-[90%] mx-auto gap-4">
+          <FiltersBar value={filters} onChange={setFilters} />
         </div>
         {isLoading ? (
           <div className="flex items-center justify-center w-full h-[300px]">
@@ -42,7 +22,7 @@ const Wears = () => {
         ) : isError ? (
           <div className="flex items-center justify-center w-full h-[300px]">
             <p className="text-red-500">
-              Error loading products. Please try again later.
+              Erro ao carregar os produtos. Tente novamente mais tarde!
             </p>
           </div>
         ) : products && products.length > 0 ? (
@@ -51,18 +31,17 @@ const Wears = () => {
               <Cards
                 key={product.id}
                 id={product.id}
-                title={product.title}
+                name={product.name}
                 description={product.description}
                 price={product.price}
-                image={product.image}
+                imagem={product.imagem}
                 category={product.category}
-                rating={product.rating}
               />
             ))}
           </div>
         ) : (
           <div className="flex items-center justify-center w-full h-[300px]">
-            <p className="text-muted-foreground">No products found</p>
+            <p className="text-muted-foreground">Nenhum Produto Encontrado!</p>
           </div>
         )}
       </div>

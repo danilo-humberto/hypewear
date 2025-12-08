@@ -1,34 +1,17 @@
-import {
-  getAllProductsOrByCategory,
-  getProduct,
-  getProducts,
-  getProductsByCategory,
-} from "@/api/endpoints";
+import { getProduct, getProducts } from "@/api/products.endpoint";
+import type { ProductFilters } from "@/types/productFilters";
 import { useQuery } from "@tanstack/react-query";
 
-export const useProducts = () =>
+export const useProducts = (filters: ProductFilters) =>
   useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
+    queryKey: ["products", filters],
+    queryFn: () => getProducts(filters),
+    retry: 2,
   });
 
-export const useProductsByCategory = (category: string) =>
-  useQuery({
-    queryKey: ["products", category],
-    queryFn: () => getProductsByCategory(category),
-    enabled: !!category,
-  });
-
-export const useProductById = (id: number) =>
+export const useProductById = (id: string) =>
   useQuery({
     queryKey: ["product", id],
     queryFn: () => getProduct(id),
-    enabled: !!id,
-  });
-
-export const useAllProductsOrByCategory = (category: string) =>
-  useQuery({
-    queryKey: ["products", category],
-    queryFn: () => getAllProductsOrByCategory(category),
-    retry: 1,
+    retry: 2,
   });

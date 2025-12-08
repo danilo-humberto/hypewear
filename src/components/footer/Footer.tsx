@@ -2,11 +2,7 @@ import { useTheme } from "@/hooks/theme-provider";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 
-interface FooterProps {
-  baseUrl: string;
-}
-
-const Footer = ({ baseUrl }: FooterProps) => {
+const Footer = () => {
   const { theme } = useTheme();
 
   return (
@@ -15,11 +11,7 @@ const Footer = ({ baseUrl }: FooterProps) => {
         <div>
           <div className="flex items-center -ml-[10px]">
             <img
-              src={
-                theme === "light"
-                  ? `${baseUrl}logo-light.png`
-                  : `${baseUrl}logo-dark.png`
-              }
+              src={theme === "light" ? `/logo-light.png` : `/logo-dark.png`}
               alt="logo da hypewear"
               className="w-12 h-11"
             />
