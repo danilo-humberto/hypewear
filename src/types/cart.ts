@@ -5,13 +5,13 @@ export interface CartItem {
   cartId: string;
   productId: string;
   quantity: number;
-  product: Product; 
-  totalPrice?: number; 
+  product: Product;
+  totalPrice?: number;
 }
 
 export interface Cart {
-  id: string;
-  clientId: string;
+  id?: string;
+  clientId?: string;
   items: CartItem[];
   subtotal: number;
 }

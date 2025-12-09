@@ -7,16 +7,17 @@ import React, {
 } from "react";
 import { toast } from "sonner";
 import { getClientData } from "@/utils/storage";
-import type { CartItem } from "@/types/cart";
-import { 
-  addItemToCart, 
-  updateCartItem, 
-  getMyCart, 
-  clearMyCart 
+import type { Cart, CartItem } from "@/types/cart";
+import {
+  addItemToCart,
+  updateCartItem,
+  getMyCart,
+  clearMyCart,
 } from "@/api/cart.endpoint";
 
 interface CartContextType {
-  cart: CartItem[];
+  cart: Cart | null;
+  items: CartItem[];
   addToCart: (productId: string) => Promise<void>;
   removeQuantityOrProduct: (productId: string) => void;
   addQuantity: (productId: string) => void;
@@ -29,8 +30,8 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  
+  const [cart, setCart] = useState<Cart | null>(null);
+
   const getToken = () => getClientData("client")?.access_token;
 
   useEffect(() => {
@@ -39,19 +40,23 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       getMyCart(token)
         .then((serverCart) => {
           if (serverCart && serverCart.items) {
-            setCart(serverCart.items);
+            setCart(serverCart);
           }
         })
-        .catch(err => console.error("Erro ao carregar carrinho", err));
+        .catch((err) => console.error("Erro ao carregar carrinho", err));
     }
   }, []);
 
+  const items = useMemo(() => cart?.items ?? [], [cart]);
+
   const total = useMemo(() => {
-    return cart.reduce((acc, item) => {
+    if (cart) return cart.subtotal;
+
+    return items.reduce((acc, item) => {
       const price = item.product?.price || 0;
-      return acc + (price * item.quantity);
+      return acc + price * item.quantity;
     }, 0);
-  }, [cart]);
+  }, [cart, items]);
 
   const addToCart = async (productId: string) => {
     const token = getToken();
@@ -60,67 +65,126 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
+    const existingItem = items.find((i) => i.productId === productId);
+
+    if (existingItem) {
+      addQuantity(productId);
+      return;
+    }
+
     try {
-      const updatedItem = await addItemToCart(productId, 1, token);
-      
-      setCart((prev) => {
-        const exists = prev.find(i => i.productId === productId);
-        if (exists) {
-          return prev.map(i => i.productId === productId ? updatedItem : i);
-        }
-        return [...prev, updatedItem];
-      });
-      
+      await addItemToCart(productId, 1, token);
+
+      const serverCart = await getMyCart(token);
+      setCart(serverCart);
+
       toast.success("Produto adicionado!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao adicionar produto.");
+    } catch (err: any) {
+      const apiMessage =
+        err?.response?.data?.message ??
+        (Array.isArray(err?.response?.data?.message)
+          ? err.response.data.message[0]
+          : null);
+
+      if (apiMessage) {
+        if (
+          apiMessage === "Quantidade solicitada maior que o estoque disponível"
+        ) {
+          toast.error(
+            "Você já atingiu a quantidade máxima disponível em estoque."
+          );
+        } else {
+          toast.error(apiMessage);
+        }
+      } else {
+        toast.error("Erro ao atualizar o carrinho.");
+      }
     }
   };
 
   const updateQuantity = async (productId: string, newQuantity: number) => {
     const token = getToken();
+    if (!token) {
+      toast.error("Faça login para atualizar ao carrinho.");
+      return;
+    }
     const quantity = Math.max(0, newQuantity);
 
-    setCart(prev => {
-        if (quantity === 0) return prev.filter(i => i.productId !== productId);
-        return prev.map(i => i.productId === productId ? { ...i, quantity } : i);
-    });
+    try {
+      await updateCartItem(productId, quantity, token);
 
-    if (token) {
-        try {
-            await updateCartItem(productId, quantity, token);
-        } catch (err) {
-            toast.error("Erro ao sincronizar carrinho.");
+      const serverCart = await getMyCart(token);
+      setCart(serverCart);
+    } catch (err: any) {
+      const apiMessage =
+        err?.response?.data?.message ??
+        (Array.isArray(err?.response?.data?.message)
+          ? err.response.data.message[0]
+          : null);
+
+      if (apiMessage) {
+        if (
+          apiMessage === "Quantidade solicitada maior que o estoque disponível"
+        ) {
+          toast.error(
+            "Você já atingiu a quantidade máxima disponível em estoque."
+          );
+        } else {
+          toast.error(apiMessage);
         }
+      } else {
+        toast.error("Erro ao atualizar o carrinho.");
+      }
     }
   };
 
   const addQuantity = (productId: string) => {
-    const item = cart.find(i => i.productId === productId);
-    if (item) updateQuantity(productId, item.quantity + 1);
+    const item = items.find((i) => i.productId === productId);
+    if (!item) return;
+
+    const estoque = item.product?.estoque ?? 0;
+    const reserved = item?.product?.reserved ?? 0;
+    const available = estoque - reserved;
+
+    if (item.quantity >= available) {
+      toast.error("Quantidade máxima disponível em estoque já foi atingida.");
+      return;
+    }
+    updateQuantity(productId, item.quantity + 1);
   };
 
   const removeQuantityOrProduct = (productId: string) => {
-    const item = cart.find(i => i.productId === productId);
+    const item = items.find((i) => i.productId === productId);
     if (!item) return;
     updateQuantity(productId, item.quantity - 1);
   };
 
   const clearCartApi = async () => {
     const token = getToken();
-    if (token) await clearMyCart(token);
-    setCart([]);
+    if (!token) {
+      toast.error("Faça login para limpar o carrinho.");
+      return;
+    }
+
+    try {
+      await clearMyCart(token);
+      setCart({ items: [], subtotal: 0 });
+      toast.success("Carrinho limpo!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao limpar carrinho.");
+    }
   };
 
   const clearCartLocal = () => {
-    setCart([]);
-  }
+    setCart({ items: [], subtotal: 0 });
+  };
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        items,
         addToCart,
         removeQuantityOrProduct,
         addQuantity,

@@ -4,6 +4,7 @@ export interface Product {
   description: string;
   price: number;
   estoque: number;
+  reserved: number;
   status: "ATIVO" | "INATIVO";
   imagem: string;
   categoryId: string;
