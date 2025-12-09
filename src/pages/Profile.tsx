@@ -127,41 +127,49 @@ const Profile = () => {
                 Você ainda não possui pedidos.
               </p>
             ) : (
-              user.orders.map((order: Order) => (
-                <DialogTrigger asChild key={order.id}>
-                  <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="border p-3 gap-2 rounded-md flex justify-between items-center cursor-pointer"
-                  >
-                    <div className="text-left">
-                      <p className="font-medium">Pedido #{order.id}</p>
-                      <p className="text-sm text-muted-foreground">
-                        Data:{" "}
-                        {new Date(order.createdAt).toLocaleDateString("pt-BR")}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        {new Intl.NumberFormat("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        }).format(order.total)}
-                      </p>
-                      <p
-                        className={`text-sm wrap-anywhere ${
-                          order.status === "PAGO"
-                            ? "text-green-600"
-                            : order.status === "CANCELADO"
-                            ? "text-red-500"
-                            : "text-yellow-500"
-                        }`}
-                      >
-                        {order.status}
-                      </p>
-                    </div>
-                  </button>
-                </DialogTrigger>
-              ))
+              [...user.orders]
+                .sort(
+                  (a, b) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                )
+                .map((order: Order) => (
+                  <DialogTrigger asChild key={order.id}>
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="border p-3 gap-2 rounded-md flex justify-between items-center cursor-pointer"
+                    >
+                      <div className="text-left">
+                        <p className="font-medium">Pedido #{order.id}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Data:{" "}
+                          {new Date(order.createdAt).toLocaleDateString(
+                            "pt-BR"
+                          )}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">
+                          {new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(order.total)}
+                        </p>
+                        <p
+                          className={`text-sm wrap-anywhere ${
+                            order.status === "PAGO"
+                              ? "text-green-600"
+                              : order.status === "CANCELADO"
+                              ? "text-red-500"
+                              : "text-yellow-500"
+                          }`}
+                        >
+                          {order.status}
+                        </p>
+                      </div>
+                    </button>
+                  </DialogTrigger>
+                ))
             )}
           </CardContent>
         </Card>
