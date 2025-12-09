@@ -13,13 +13,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getClientData } from "@/utils/storage";
 import { logout } from "@/api/auth.endpoint";
 import { toast } from "sonner";
+import { useCart } from "@/hooks/useCart";
 
 const IconsDesktop = () => {
   const client = getClientData("client");
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { clearCartLocal } = useCart();
   const handleLogout = () => {
     logout();
+    clearCartLocal();
     toast.success("Você saiu com sucesso!");
     if (pathname !== "/") {
       navigate("/");

@@ -2,6 +2,7 @@ import Forms from "@/components/auth/Forms";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/queries/useAuth";
 import { useTheme } from "@/hooks/theme-provider";
+import { useCart } from "@/hooks/useCart";
 import { setClientData } from "@/utils/storage";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +12,7 @@ const Login = () => {
   const { theme } = useTheme();
   const { loginMutation } = useAuth();
   const navigate = useNavigate();
+  const { reloadCart } = useCart();
 
   const handleSubmit = (
     e: React.FormEvent,
@@ -22,13 +24,14 @@ const Login = () => {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           const client = {
             access_token: data.access_token,
             client: { ...data.client },
           };
           setClientData("client", client);
           toast.success("Login realizado com sucesso!");
+          await reloadCart();
           navigate("/");
         },
         onError: (error) => {

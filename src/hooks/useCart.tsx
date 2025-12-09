@@ -25,6 +25,7 @@ interface CartContextType {
   clearCartLocal: () => void;
   clearCartApi: () => Promise<void>;
   total: number;
+  reloadCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -34,17 +35,27 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getToken = () => getClientData("client")?.access_token;
 
-  useEffect(() => {
+  const getCart = async () => {
     const token = getToken();
-    if (token) {
-      getMyCart(token)
-        .then((serverCart) => {
-          if (serverCart && serverCart.items) {
-            setCart(serverCart);
-          }
-        })
-        .catch((err) => console.error("Erro ao carregar carrinho", err));
+    if (!token) {
+      setCart({ items: [], subtotal: 0 });
+      return;
     }
+
+    try {
+      const serverCart = await getMyCart(token);
+      if (serverCart && serverCart.items) {
+        setCart(serverCart);
+      } else {
+        setCart({ items: [], subtotal: 0 });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getCart();
   }, []);
 
   const items = useMemo(() => cart?.items ?? [], [cart]);
@@ -62,13 +73,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const token = getToken();
     if (!token) {
       toast.error("Faça login para adicionar ao carrinho.");
-      return;
-    }
-
-    const existingItem = items.find((i) => i.productId === productId);
-
-    if (existingItem) {
-      addQuantity(productId);
       return;
     }
 
@@ -192,6 +196,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         clearCartLocal,
         clearCartApi,
         total,
+        reloadCart: getCart,
       }}
     >
       {children}
