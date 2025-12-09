@@ -11,6 +11,7 @@ const DetailsProduct = () => {
   const { addToCart } = useCart();
 
   const { data, isLoading, isError } = useProductById(id!);
+  const available = data?.estoque - data?.reserverd;
 
   useEffect(() => {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
@@ -56,7 +57,7 @@ const DetailsProduct = () => {
               <div className="flex items-center justify-between pt-2">
                 <div>
                   <p className="text-xs text-muted-foreground">
-                    Quantidade Disponíveis: {data?.estoque}
+                    Quantidade Disponíveis: {available}
                   </p>
                   <div>
                     <span className="font-bold text-2xl">
