@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/queries/useAuth";
 import { useTheme } from "@/hooks/theme-provider";
 import type { RegisterDto } from "@/types/auth";
 import { setClientData } from "@/utils/storage";
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -27,10 +28,21 @@ const Register = () => {
           toast.success("Cadastro realizado com sucesso!");
           navigate("/");
         },
-        onError: () => {
-          toast.error(
-            "Ocorreu um erro inesperado! Tente novamente mais tarde."
-          );
+        onError: (error) => {
+          if (axios.isAxiosError(error) && error.response) {
+            const data = error.response.data;
+            let message = data.message;
+
+            if (Array.isArray(message)) {
+              message = message.join("\n");
+            }
+
+            toast.error(message || "Erro ao realizar cadastro.");
+          } else {
+            toast.error(
+              "Ocorreu um erro inesperado! Tente novamente mais tarde."
+            );
+          }
         },
       }
     );
