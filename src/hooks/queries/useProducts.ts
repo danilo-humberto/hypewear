@@ -1,6 +1,7 @@
-import { getProduct, getProducts } from "@/api/products.endpoint";
+import { addProduct, getProduct, getProducts } from "@/api/products.endpoint";
+import type { Product } from "@/types/product";
 import type { ProductFilters } from "@/types/productFilters";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useProducts = (filters: ProductFilters) =>
   useQuery({
@@ -15,3 +16,12 @@ export const useProductById = (id: string) =>
     queryFn: () => getProduct(id),
     retry: 2,
   });
+
+export const useAddProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: Product) => addProduct(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+  });
+};
