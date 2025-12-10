@@ -1,4 +1,4 @@
-import { createOrder, getOrders } from "@/api/orders.endpoint";
+import { createOrder, getOrder, getOrders } from "@/api/orders.endpoint";
 import type { Order, CreateOrderDto } from "@/types/order";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -17,6 +17,15 @@ export const useGetOrders = (clientId: string) => {
   return useQuery({
     queryKey: ["orders", clientId],
     queryFn: () => getOrders(clientId),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+};
+
+export const useGetOrder = (id: string, token: string) => {
+  return useQuery({
+    queryKey: ["order", id],
+    queryFn: () => getOrder(id, token),
     retry: false,
     refetchOnWindowFocus: false,
   });

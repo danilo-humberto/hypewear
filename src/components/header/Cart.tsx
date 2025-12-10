@@ -14,14 +14,12 @@ import {
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Dialog } from "../ui/dialog";
-import { PaymentDialog } from "./PaymentDialog";
 
 const Cart = () => {
   const { items, removeQuantityOrProduct, addQuantity, updateQuantity, total } =
     useCart();
   const {
     isPaymentOpen,
-    createdOrder,
     handleCheckout,
     handleModalOpenChange,
     isCheckoutLoading,
@@ -153,13 +151,6 @@ const Cart = () => {
           </SheetFooter>
         </SheetContent>
       </Sheet>
-
-      {createdOrder && (
-        <PaymentDialog
-          order={createdOrder}
-          onOpenChange={handleModalOpenChange}
-        />
-      )}
     </Dialog>
   );
 };

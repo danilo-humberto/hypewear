@@ -22,3 +22,17 @@ export const getOrders = async (id: string) => {
     throw err;
   }
 };
+
+export const getOrder = async (id: string, token: string) => {
+  try {
+    const { data } = await api.get(`/orders/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (err: any) {
+    if (err.response?.status === 404) return null;
+    throw err;
+  }
+};
