@@ -3,7 +3,6 @@ import { Loader2 } from "lucide-react";
 import ProfileData from "@/components/profile/ProfileData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { Order } from "@/types/order";
 import { useClientMe, useUpdateClientMe } from "@/hooks/queries/useClient";
 import {
@@ -136,91 +135,82 @@ const Profile = () => {
         setIsAddressModalOpen={setIsAddressModalOpen}
         addAddress={handleAddAddress}
       />
-      <Dialog>
-        <Card className="w-full shadow-md border border-border/50">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">
-              Histórico de Pedidos
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <Separator />
-            {user.orders?.length === 0 ? (
-              <p className="text-muted-foreground text-center py-6">
-                Você ainda não possui pedidos.
-              </p>
-            ) : (
-              [...user.orders]
-                .sort(
-                  (a, b) =>
-                    new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
-                )
-                .map((order: Order) => (
-                  <DialogTrigger asChild key={order.id}>
-                    <button
-                      onClick={() => handleOpenOrder(order.id)}
-                      className="border p-3 gap-2 rounded-md flex justify-between items-center cursor-pointer"
-                      disabled={
-                        order.status === "CANCELADO" || order.status === "PAGO"
-                      }
+      <Card className="w-full shadow-md border border-border/50">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold">
+            Histórico de Pedidos
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <Separator />
+          {user.orders?.length === 0 ? (
+            <p className="text-muted-foreground text-center py-6">
+              Você ainda não possui pedidos.
+            </p>
+          ) : (
+            [...user.orders]
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+              )
+              .map((order: Order) => (
+                <button
+                  key={order.id}
+                  onClick={() => handleOpenOrder(order.id)}
+                  className="border p-3 gap-2 rounded-md flex justify-between items-center cursor-pointer"
+                  disabled={
+                    order.status === "CANCELADO" || order.status === "PAGO"
+                  }
+                >
+                  <div className="text-left">
+                    <p className="font-medium">Pedido #{order.id}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Data:{" "}
+                      {new Date(order.createdAt).toLocaleDateString("pt-BR")}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">
+                      {new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(order.total)}
+                    </p>
+                    <p
+                      className={`text-sm wrap-anywhere ${
+                        order.status === "PAGO"
+                          ? "text-green-600"
+                          : order.status === "CANCELADO"
+                          ? "text-red-500"
+                          : "text-yellow-500"
+                      }`}
                     >
-                      <div className="text-left">
-                        <p className="font-medium">Pedido #{order.id}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Data:{" "}
-                          {new Date(order.createdAt).toLocaleDateString(
-                            "pt-BR"
-                          )}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">
-                          {new Intl.NumberFormat("pt-BR", {
-                            style: "currency",
-                            currency: "BRL",
-                          }).format(order.total)}
-                        </p>
-                        <p
-                          className={`text-sm wrap-anywhere ${
-                            order.status === "PAGO"
-                              ? "text-green-600"
-                              : order.status === "CANCELADO"
-                              ? "text-red-500"
-                              : "text-yellow-500"
-                          }`}
-                        >
-                          {order.status}
-                        </p>
-                      </div>
-                    </button>
-                  </DialogTrigger>
-                ))
-            )}
-          </CardContent>
-        </Card>
-        {openPaymentDialog && selectedOrder && (
-          <PaymentDialog
-            order={selectedOrder}
-            onOpenChange={(v) => setOpenPaymentDialog(v)}
-            refetchCreatedOrder={async (id) => {
-              const token = getClientData("client")?.access_token!;
-              const fresh = await getOrder(id, token);
-              setSelectedOrder(fresh);
-              return fresh;
-            }}
-          />
-        )}
-        {openReviewDialog && selectedOrder && selectedPayment && (
-          <PaymentReviewDialog
-            open={openReviewDialog}
-            onOpenChange={setOpenReviewDialog}
-            order={user.orders?.find((o: any) => o.id === selectedOrder.id)!}
-            paymentMethod={selectedPayment.method}
-            payment={selectedPayment}
-          />
-        )}
-      </Dialog>
+                      {order.status}
+                    </p>
+                  </div>
+                </button>
+              ))
+          )}
+        </CardContent>
+      </Card>
+      {openPaymentDialog && selectedOrder && (
+        <PaymentDialog
+          order={selectedOrder}
+          onOpenChange={(v) => setOpenPaymentDialog(v)}
+          open={openPaymentDialog}
+        />
+      )}
+      {selectedOrder && selectedPayment && (
+        <PaymentReviewDialog
+          open={openReviewDialog}
+          onOpenChange={setOpenReviewDialog}
+          order={selectedOrder}
+          paymentMethod={selectedPayment.method}
+          payment={selectedPayment}
+          onPaymentDialogChange={setOpenPaymentDialog}
+        />
+      )}
     </div>
   );
 };

@@ -3,12 +3,14 @@ import { useCreatePaymentMutation } from "./queries/usePayment";
 import type { Order } from "@/types/order";
 import type { PaymentMethodType, CreatePaymentDto } from "@/types/payments";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const usePayment = (
   order: Order,
   onOpenChange: (open: boolean) => void
 ) => {
   const createPayment = useCreatePaymentMutation();
+  const queryClient = useQueryClient();
 
   const handleConfirmPayment = async (method: PaymentMethodType | null) => {
     const authData = getClientData("client");
@@ -28,10 +30,19 @@ export const usePayment = (
       method: method,
     };
 
-    return createPayment.mutateAsync({
-      dto: paymentDto,
-      token: authData.access_token,
-    });
+    return createPayment.mutateAsync(
+      {
+        dto: paymentDto,
+        token: authData.access_token,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["clients", order.clientId],
+          });
+        },
+      }
+    );
   };
 
   const handleCancel = () => {

@@ -18,6 +18,7 @@ interface Props {
   order: Order;
   paymentMethod: PaymentMethodType | null;
   payment: Payment | null;
+  onPaymentDialogChange: (onPaymentDialogOpen: boolean) => void;
 }
 
 export const PaymentReviewDialog = ({
@@ -26,6 +27,7 @@ export const PaymentReviewDialog = ({
   order,
   paymentMethod,
   payment,
+  onPaymentDialogChange,
 }: Props) => {
   const handleConfirm = async () => {
     if (!payment) return toast.error("Pagamento não encontrado.");
@@ -35,7 +37,8 @@ export const PaymentReviewDialog = ({
       await confirmPayment(payment.id, token);
       toast.success("Pagamento confirmado.");
       onOpenChange(false);
-      onOpenChange(false);
+      onPaymentDialogChange(false);
+      window.location.reload();
     } catch (e: any) {
       toast.error(e?.response?.data?.message || "Erro ao confirmar pagamento.");
     }
@@ -49,7 +52,8 @@ export const PaymentReviewDialog = ({
       await cancelPayment(payment.id, token);
       toast.info("Pagamento cancelado.");
       onOpenChange(false);
-      onOpenChange(false);
+      onPaymentDialogChange(false);
+      window.location.reload();
     } catch (e: any) {
       toast.error(e?.response?.data?.message || "Erro ao cancelar pagamento.");
     }
@@ -67,8 +71,11 @@ export const PaymentReviewDialog = ({
               <li key={item.id} className="flex justify-between">
                 <span>{item.product?.name}</span>
                 <span>
-                  {item.quantity}x R$
-                  {item.unitPrice}
+                  {item.quantity}x{" "}
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(item.unitPrice || 0)}
                 </span>
               </li>
             ))}
