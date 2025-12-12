@@ -75,7 +75,7 @@ export const PaymentDialog = ({
             order.items.map((item) => (
               <li
                 key={item.id}
-                className="border rounded-sm p-3 mb-4 flex justify-between items-center"
+                className="border rounded-sm p-3 mb-4 flex flex-col lg:flex-row lg:justify-between lg:items-center"
               >
                 <div className="flex items-center gap-3">
                   <img
@@ -83,16 +83,16 @@ export const PaymentDialog = ({
                     alt={item.product?.name}
                     className="w-16 h-16 object-contain rounded-md"
                   />
-                  <div>
+                  <div className="max-w-[200px] lg:max-w-[250px]">
                     <p className="text-sm font-medium truncate">
                       {item.product?.name}
                     </p>
-                    <p className="text-xs text-muted-foreground max-w-[250px] truncate">
+                    <p className="text-xs text-muted-foreground truncate">
                       {item.product?.description}
                     </p>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground text-right">
                   {item.quantity} x{" "}
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
